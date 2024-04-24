@@ -1,0 +1,4 @@
+# Eliminamos los ficheros que genera MAC al hacer commit
+.DS_store
+# Eliminamos la carpeta del venv ya que pesa mucho y solo tenemos que instalarnos todo lo escrito en 'requierements.txt'
+.python-venv/
