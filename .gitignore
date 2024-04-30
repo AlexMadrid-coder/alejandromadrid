@@ -4,3 +4,5 @@
 .python-venv/
 # Eliminamos el fichero .env donde tenemos el fichero con las KEYS de las API
 .env
+# Eliminamos el directorio .vscode/ donde tenemos toda la configuración de nuestor editor de texto
+.vscode/
