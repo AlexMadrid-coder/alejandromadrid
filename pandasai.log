@@ -304,3 +304,345 @@ result = {'type': 'string', 'value': 'Hello Alex, sure I can talk to you about s
 2024-05-02 19:36:58 [INFO] Executing Step 7: ResultValidation
 2024-05-02 19:36:58 [INFO] Answer: {'type': 'string', 'value': 'Hello Alex, sure I can talk to you about signal processing. Signal processing is a technique used to analyze, modify, and synthesize signals such as sound, images, and sensor data. It involves various operations like filtering, noise reduction, compression, and feature extraction. Is there anything specific you would like to know about signal processing?'}
 2024-05-02 19:36:58 [INFO] Executing Step 8: ResultParsing
+2024-05-02 19:41:28 [INFO] Question: can you make a plot about the average salary in it companies
+2024-05-02 19:41:28 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-05-02 19:41:28 [INFO] Prompt ID: 5554f6b9-bcb2-4e28-9b07-bd846f98fdf0
+2024-05-02 19:41:28 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-05-02 19:41:28 [INFO] Executing Step 0: ValidatePipelineInput
+2024-05-02 19:41:28 [INFO] Executing Step 1: CacheLookup
+2024-05-02 19:41:28 [INFO] Executing Step 2: PromptGeneration
+2024-05-02 19:41:29 [INFO] Using prompt: <dataframe>
+dfs[0]:1x0
+
+
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+You can utilize these examples as a reference for generating code.
+
+Q: What are the top 5 countries by GDP?
+ A: 
+import pandas as pd
+
+df = dfs[0]
+
+# Convert GDP column to numeric values
+df['gdp'] = pd.to_numeric(df['gdp'])
+
+# Sort the DataFrame by GDP in descending order
+sorted_df = df.sort_values(by='gdp', ascending=False)
+
+# Get the top 5 countries by GDP
+top_5_countries = sorted_df.head(5)
+
+# Declare result variable
+result = {
+    "type": "dataframe",
+    "value": top_5_countries
+}
+
+
+
+
+### QUERY
+ can you make a plot about the average salary in it companies
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-05-02 19:41:29 [INFO] Executing Step 3: CodeGenerator
+2024-05-02 19:41:35 [INFO] Prompt used:
+            None
+            
+2024-05-02 19:41:35 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Assuming you have a DataFrame with IT company salaries named 'it_salaries_df'
+
+# Calculate average salary in IT companies
+average_salary = it_salaries_df['salary'].mean()
+
+# Create a bar plot to visualize the average salary in IT companies
+plt.figure(figsize=(10, 6))
+plt.bar('Average Salary', average_salary, color='skyblue')
+plt.xlabel('IT Companies')
+plt.ylabel('Average Salary')
+plt.title('Average Salary in IT Companies')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+
+# Save the plot as a PNG file
+plt.savefig('average_salary_in_it_companies.png')
+
+# Declare result variable
+result = {
+    "type": "plot",
+    "value": "average_salary_in_it_companies.png"
+}
+            ```
+            
+2024-05-02 19:41:35 [INFO] Executing Step 4: CachePopulation
+2024-05-02 19:41:35 [INFO] Executing Step 5: CodeCleaning
+2024-05-02 19:41:35 [INFO] Saving charts to /Users/alejandro/Documents/Repositorios/alejandromadrid/PythonProjects/AskBot-PandasAI/exports/charts/temp_chart.png
+2024-05-02 19:41:35 [INFO] 
+Code running:
+```
+average_salary = it_salaries_df['salary'].mean()
+plt.figure(figsize=(10, 6))
+plt.bar('Average Salary', average_salary, color='skyblue')
+plt.xlabel('IT Companies')
+plt.ylabel('Average Salary')
+plt.title('Average Salary in IT Companies')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.savefig('/Users/alejandro/Documents/Repositorios/alejandromadrid/PythonProjects/AskBot-PandasAI/exports/charts/temp_chart.png')
+result = {'type': 'plot', 'value': '/Users/alejandro/Documents/Repositorios/alejandromadrid/PythonProjects/AskBot-PandasAI/exports/charts/temp_chart.png'}
+        ```
+2024-05-02 19:41:35 [INFO] Executing Step 6: CodeExecution
+2024-05-02 19:41:35 [ERROR] Failed with error: Traceback (most recent call last):
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 171, in execute_code
+    exec(code, environment)
+  File "<string>", line 1, in <module>
+NameError: name 'it_salaries_df' is not defined
+
+2024-05-02 19:41:35 [WARNING] Failed to execute code retrying with a correction framework [retry number: 1]
+2024-05-02 19:41:35 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-05-02 19:41:35 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-05-02 19:41:35 [INFO] Using prompt: <dataframe>
+dfs[0]:1x0
+
+
+</dataframe>
+
+
+The user asked the following question:
+### QUERY
+ can you make a plot about the average salary in it companies
+
+You generated this python code:
+average_salary = it_salaries_df['salary'].mean()
+plt.figure(figsize=(10, 6))
+plt.bar('Average Salary', average_salary, color='skyblue')
+plt.xlabel('IT Companies')
+plt.ylabel('Average Salary')
+plt.title('Average Salary in IT Companies')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.savefig('/Users/alejandro/Documents/Repositorios/alejandromadrid/PythonProjects/AskBot-PandasAI/exports/charts/temp_chart.png')
+result = {'type': 'plot', 'value': '/Users/alejandro/Documents/Repositorios/alejandromadrid/PythonProjects/AskBot-PandasAI/exports/charts/temp_chart.png'}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 171, in execute_code
+    exec(code, environment)
+  File "<string>", line 1, in <module>
+NameError: name 'it_salaries_df' is not defined
+
+
+Fix the python code above and return the new python code:
+2024-05-02 19:41:35 [INFO] Executing Step 1: CodeGenerator
+2024-05-02 19:41:39 [INFO] Prompt used:
+            None
+            
+2024-05-02 19:41:39 [INFO] Code generated:
+            ```
+            import pandas as pd
+import matplotlib.pyplot as plt
+
+# Assuming you have a DataFrame named it_salaries_df with columns: 'company' and 'salary'
+# Sample code to create a DataFrame for demonstration purposes
+data = {'company': ['Company A', 'Company B', 'Company C'],
+        'salary': [65000, 72000, 68000]}
+it_salaries_df = pd.DataFrame(data)
+
+average_salary = it_salaries_df['salary'].mean()
+
+plt.figure(figsize=(10, 6))
+plt.bar('Average Salary', average_salary, color='skyblue')
+plt.xlabel('IT Companies')
+plt.ylabel('Average Salary')
+plt.title('Average Salary in IT Companies')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+            ```
+            
+2024-05-02 19:41:39 [INFO] Executing Step 2: CodeCleaning
+2024-05-02 19:41:39 [INFO] 
+Code running:
+```
+data = {'company': ['Company A', 'Company B', 'Company C'], 'salary': [65000, 72000, 68000]}
+it_salaries_df = pd.DataFrame(data)
+average_salary = it_salaries_df['salary'].mean()
+plt.figure(figsize=(10, 6))
+plt.bar('Average Salary', average_salary, color='skyblue')
+plt.xlabel('IT Companies')
+plt.ylabel('Average Salary')
+plt.title('Average Salary in IT Companies')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+        ```
+2024-05-02 19:41:40 [ERROR] Failed with error: Traceback (most recent call last):
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+2024-05-02 19:41:40 [WARNING] Failed to execute code retrying with a correction framework [retry number: 2]
+2024-05-02 19:41:40 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-05-02 19:41:40 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-05-02 19:41:40 [INFO] Using prompt: <dataframe>
+dfs[0]:1x0
+
+
+</dataframe>
+
+
+The user asked the following question:
+### QUERY
+ can you make a plot about the average salary in it companies
+
+You generated this python code:
+data = {'company': ['Company A', 'Company B', 'Company C'], 'salary': [65000, 72000, 68000]}
+it_salaries_df = pd.DataFrame(data)
+average_salary = it_salaries_df['salary'].mean()
+plt.figure(figsize=(10, 6))
+plt.bar('Average Salary', average_salary, color='skyblue')
+plt.xlabel('IT Companies')
+plt.ylabel('Average Salary')
+plt.title('Average Salary in IT Companies')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+
+Fix the python code above and return the new python code:
+2024-05-02 19:41:40 [INFO] Executing Step 1: CodeGenerator
+2024-05-02 19:41:44 [INFO] Prompt used:
+            None
+            
+2024-05-02 19:41:44 [INFO] Code generated:
+            ```
+            import pandas as pd
+import matplotlib.pyplot as plt
+
+data = {'company': ['Company A', 'Company B', 'Company C'], 'salary': [65000, 72000, 68000]}
+it_salaries_df = pd.DataFrame(data)
+average_salary = it_salaries_df['salary'].mean()
+
+plt.figure(figsize=(10, 6))
+plt.bar(it_salaries_df['company'], it_salaries_df['salary'], color='skyblue')
+plt.axhline(average_salary, color='red', linestyle='--', label='Average Salary')
+plt.xlabel('IT Companies')
+plt.ylabel('Salary')
+plt.title('Average Salary in IT Companies')
+plt.legend()
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+            ```
+            
+2024-05-02 19:41:44 [INFO] Executing Step 2: CodeCleaning
+2024-05-02 19:41:44 [INFO] 
+Code running:
+```
+data = {'company': ['Company A', 'Company B', 'Company C'], 'salary': [65000, 72000, 68000]}
+it_salaries_df = pd.DataFrame(data)
+average_salary = it_salaries_df['salary'].mean()
+plt.figure(figsize=(10, 6))
+plt.bar(it_salaries_df['company'], it_salaries_df['salary'], color='skyblue')
+plt.axhline(average_salary, color='red', linestyle='--', label='Average Salary')
+plt.xlabel('IT Companies')
+plt.ylabel('Salary')
+plt.title('Average Salary in IT Companies')
+plt.legend()
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+        ```
+2024-05-02 19:41:45 [ERROR] Failed with error: Traceback (most recent call last):
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+2024-05-02 19:41:45 [WARNING] Failed to execute code retrying with a correction framework [retry number: 3]
+2024-05-02 19:41:45 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-05-02 19:41:45 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-05-02 19:41:45 [INFO] Using prompt: <dataframe>
+dfs[0]:1x0
+
+
+</dataframe>
+
+
+The user asked the following question:
+### QUERY
+ can you make a plot about the average salary in it companies
+
+You generated this python code:
+data = {'company': ['Company A', 'Company B', 'Company C'], 'salary': [65000, 72000, 68000]}
+it_salaries_df = pd.DataFrame(data)
+average_salary = it_salaries_df['salary'].mean()
+plt.figure(figsize=(10, 6))
+plt.bar(it_salaries_df['company'], it_salaries_df['salary'], color='skyblue')
+plt.axhline(average_salary, color='red', linestyle='--', label='Average Salary')
+plt.xlabel('IT Companies')
+plt.ylabel('Salary')
+plt.title('Average Salary in IT Companies')
+plt.legend()
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-venv/lib/python3.9/site-packages/pandasai/pipelines/chat/code_execution.py", line 175, in execute_code
+    raise NoResultFoundError("No result returned")
+pandasai.exceptions.NoResultFoundError: No result returned
+
+
+Fix the python code above and return the new python code:
+2024-05-02 19:41:45 [INFO] Executing Step 1: CodeGenerator
+2024-05-02 19:41:49 [ERROR] Pipeline failed on step 1: No code found in the response
+2024-05-02 19:41:49 [ERROR] Pipeline failed on step 6: No code found in the response
