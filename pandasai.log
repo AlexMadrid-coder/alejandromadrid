@@ -119,3 +119,68 @@ total_angry_tweets
 
 [1155 rows x 13 columns]}
 2024-04-29 18:03:12 [INFO] Executing Step 8: ResultParsing
+2024-05-02 11:43:54 [INFO] Question: Show the tweets with the anger flag True and how many of them there are
+2024-05-02 11:43:54 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-05-02 11:43:54 [INFO] Prompt ID: 7dc03df6-7ea8-43ff-b372-7963e6429723
+2024-05-02 11:43:54 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-05-02 11:43:54 [INFO] Executing Step 0: ValidatePipelineInput
+2024-05-02 11:43:54 [INFO] Executing Step 1: CacheLookup
+2024-05-02 11:43:54 [INFO] Using cached response
+2024-05-02 11:43:54 [INFO] Executing Step 2: PromptGeneration
+2024-05-02 11:43:54 [INFO] Executing Step 2: Skipping...
+2024-05-02 11:43:54 [INFO] Executing Step 3: CodeGenerator
+2024-05-02 11:43:54 [INFO] Executing Step 3: Skipping...
+2024-05-02 11:43:54 [INFO] Executing Step 4: CachePopulation
+2024-05-02 11:43:54 [INFO] Executing Step 4: Skipping...
+2024-05-02 11:43:54 [INFO] Executing Step 5: CodeCleaning
+2024-05-02 11:43:54 [INFO] 
+Code running:
+```
+anger_tweets = [df[df['anger'] == True] for df in dfs]
+total_angry_tweets = sum([len(tweets) for tweets in anger_tweets])
+result = {'type': 'dataframe', 'value': pd.concat(anger_tweets)}
+total_angry_tweets
+        ```
+2024-05-02 11:43:54 [INFO] Executing Step 6: CodeExecution
+2024-05-02 11:43:55 [INFO] Executing Step 7: ResultValidation
+2024-05-02 11:43:55 [INFO] Answer: {'type': 'dataframe', 'value':                  ID                                              Tweet  anger  \
+2     2018-Es-05379  @audiomano A mí tampoco me agrado mucho eso. E...   True   
+4     2018-Es-01385  @DalasReview me encanta la terrible hipocresia...   True   
+7     2018-Es-02108            @tctelevision @calle7tc Terrible  esto!   True   
+11    2018-Es-04296  Qué perra rabia cuando tienes sueño pero no pu...   True   
+12    2018-Es-06944          Le dije por su nombre y cerró la cuenta 😆   True   
+...             ...                                                ...    ...   
+3549  2018-Es-01947  me siento super miserable ahorita porque soy u...   True   
+3552  2018-Es-01700  "Hombres cuya única preocupación pasa por si s...   True   
+3555  2018-Es-00840                 @BursiFrancisco sos amargo jugando   True   
+3557  2018-Es-00439  El mayor criminal del país diciéndole “delincu...   True   
+3558  2018-Es-04919  Mi prima de 4 años se ha enfadado conmigo porq...   True   
+
+      anticipation  disgust   fear    joy   love  optimism  pessimism  \
+2            False    False  False  False  False     False      False   
+4            False     True  False  False  False     False      False   
+7            False     True  False  False  False     False      False   
+11           False    False  False  False  False     False      False   
+12           False    False  False   True  False     False      False   
+...            ...      ...    ...    ...    ...       ...        ...   
+3549         False    False  False  False  False     False       True   
+3552         False     True  False  False  False     False       True   
+3555         False     True  False  False  False     False      False   
+3557         False     True  False  False  False     False      False   
+3558         False    False  False  False  False     False      False   
+
+      sadness  surprise  trust  
+2       False     False  False  
+4       False     False  False  
+7        True     False  False  
+11      False     False  False  
+12       True     False  False  
+...       ...       ...    ...  
+3549     True     False  False  
+3552    False     False  False  
+3555    False     False  False  
+3557    False     False  False  
+3558    False      True  False  
+
+[1155 rows x 13 columns]}
+2024-05-02 11:43:55 [INFO] Executing Step 8: ResultParsing
