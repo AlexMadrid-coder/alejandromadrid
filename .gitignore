@@ -10,3 +10,6 @@
 cache/
 exports/
 pandasai.log
+# Libraries downloaded which don't have pip installer
+libs/
+saint/
