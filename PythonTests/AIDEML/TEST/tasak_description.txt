@@ -1,0 +1,1 @@
+Quiero que me hagas un clasificador que sea capaz de predecir correctamente todos los tweets del grupo de test sem_eval_test_grupo_10.csv a raíz de los datos de entrenamiento sem_eval_train_es.csv.
