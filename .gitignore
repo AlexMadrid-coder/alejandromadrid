@@ -14,5 +14,5 @@ pandasai.log
 # Libraries downloaded which don't have pip installer
 libs/
 saint/
-# Language model for test the aide 
-PythonTests/AIDEML/TEST/Data/
+
+PythonTests/AIDEML/TEST/
