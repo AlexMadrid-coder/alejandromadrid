@@ -1141,3 +1141,507 @@ result = {'type': 'string', 'value': f'The accuracy of the Random Forest classif
 2024-06-05 12:48:23 [INFO] Executing Step 7: ResultValidation
 2024-06-05 12:48:23 [INFO] Answer: {'type': 'string', 'value': 'The accuracy of the Random Forest classifier is: 1.0'}
 2024-06-05 12:48:23 [INFO] Executing Step 8: ResultParsing
+2024-06-06 10:01:16 [INFO] Question: How are pay, overtime and benefits allocated between different groups?
+2024-06-06 10:01:16 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:01:16 [INFO] Prompt ID: 0c7b0567-fb7a-4185-96dd-9f5e7465c207
+2024-06-06 10:01:16 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:01:50 [INFO] Question: How are pay, overtime and benefits allocated between different groups?
+2024-06-06 10:01:50 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:01:50 [INFO] Prompt ID: 6081c0dc-1e0a-47eb-9eb0-3234d4342bcb
+2024-06-06 10:01:50 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:02:09 [INFO] Question: How are pay, overtime and benefits allocated between different groups?
+2024-06-06 10:02:09 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:02:09 [INFO] Prompt ID: f6c000ca-0cad-4ab3-8ccd-ddc8bd804895
+2024-06-06 10:02:09 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:02:14 [INFO] Question: How are pay, overtime and benefits allocated between different groups?
+2024-06-06 10:02:14 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:02:14 [INFO] Prompt ID: 009f46d9-dda2-4d3d-86c8-6b765338638f
+2024-06-06 10:02:14 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:06:12 [INFO] Question: How are pay, overtime and benefits allocated between different groups?
+2024-06-06 10:06:12 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:06:12 [INFO] Prompt ID: 8a95c186-6824-4308-a405-39d487e799ad
+2024-06-06 10:06:12 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:06:12 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-06 10:06:12 [INFO] Executing Step 1: CacheLookup
+2024-06-06 10:06:12 [INFO] Executing Step 2: PromptGeneration
+2024-06-06 10:06:13 [INFO] Using prompt: <dataframe name="Salaries">
+dfs[0]:148654x13
+Id,EmployeeName,JobTitle,BasePay,OvertimePay,OtherPay,Benefits,TotalPay,TotalPayBenefits,Year,Notes,Agency,Status
+12886,HOLLY LUNG,PRINCIPAL ADMINISTRATIVE ANALYST,85302.05,0.0,0.0,,85302.05,85302.05,2011,,San Francisco,
+21207,MARIA PAVIA,GARDENER,58056.0,147.36,1306.36,,59509.72,59509.72,2011,,San Francisco,
+107054,James  Harfman,Pool Lifeguard,7358.17,0.0,286.07,0,7644.24,7644.24,2013,,San Francisco,
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+
+
+
+
+### QUERY
+ How are pay, overtime and benefits allocated between different groups?
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-06-06 10:06:13 [INFO] Executing Step 3: CodeGenerator
+2024-06-06 10:06:20 [INFO] Prompt used:
+            None
+            
+2024-06-06 10:06:20 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+Salaries = pd.DataFrame({
+    'Id': [12886, 21207, 107054],
+    'EmployeeName': ['HOLLY LUNG', 'MARIA PAVIA', 'James Harfman'],
+    'JobTitle': ['PRINCIPAL ADMINISTRATIVE ANALYST', 'GARDENER', 'Pool Lifeguard'],
+    'BasePay': [85302.05, 58056.0, 7358.17],
+    'OvertimePay': [0.0, 147.36, 0.0],
+    'OtherPay': [0.0, 1306.36, 286.07],
+    'Benefits': [None, None, 0],
+    'TotalPay': [85302.05, 59509.72, 7644.24],
+    'TotalPayBenefits': [85302.05, 59509.72, 7644.24],
+    'Year': [2011, 2011, 2013],
+    'Notes': [None, None, None],
+    'Agency': ['San Francisco', 'San Francisco', 'San Francisco'],
+    'Status': [None, None, None]
+})
+
+# Allocation between different groups can be analyzed by grouping the data based on specific criteria and calculating the sum
+grouped_data = Salaries.groupby('JobTitle')[['BasePay', 'OvertimePay', 'Benefits']].sum()
+
+# Declare result var
+result = {
+    "type": "dataframe",
+    "value": grouped_data
+}
+            ```
+            
+2024-06-06 10:06:20 [INFO] Executing Step 4: CachePopulation
+2024-06-06 10:06:20 [INFO] Executing Step 5: CodeCleaning
+2024-06-06 10:06:22 [INFO] 
+Code running:
+```
+Salaries = dfs[0]
+grouped_data = Salaries.groupby('JobTitle')[['BasePay', 'OvertimePay', 'Benefits']].sum()
+result = {'type': 'dataframe', 'value': grouped_data}
+        ```
+2024-06-06 10:06:22 [INFO] Executing Step 6: CodeExecution
+2024-06-06 10:06:23 [INFO] Executing Step 7: ResultValidation
+2024-06-06 10:06:23 [INFO] Answer: {'type': 'dataframe', 'value': Empty DataFrame
+Columns: []
+Index: [ACCOUNT CLERK, ACCOUNTANT, ACCOUNTANT INTERN, ACPO,JuvP, Juv Prob (SFERS), ACUPUNCTURIST, ADMINISTRATIVE ANALYST, ADMINISTRATIVE ANALYST II, ADMINISTRATIVE ANALYST III, ADMINISTRATIVE ENGINEER, ADMINISTRATIVE SERVICES MANAGER, ADMINISTRATOR, SFGH MEDICAL CENTER, AFFIRMATIVE ACTION SPECIALIST, AGRICULTURAL INSPECTOR, AIRPORT ASSISTANT DEPUTY DIRECTOR, BUSINESS ADMINI, AIRPORT ASSISTANT DEPUTY DIRECTOR, OPERATIONS, AIRPORT COMMUNICATIONS OPERATOR, AIRPORT COMMUNICATIONS SUPERVISOR, AIRPORT ECONOMIC PLANNER, AIRPORT ELECTRICIAN, AIRPORT ELECTRICIAN SUPERVISOR, AIRPORT EMERGENCY PLANNING COORDINATOR, AIRPORT MECHANICAL MAINTENANCE SUPERVISOR, AIRPORT NOISE ABATEMENT SPECIALIST, AIRPORT OPERATIONS SUPERVISOR, AIRPORT POLICE SERVICES AIDE, AIRPORT PROPERTY SPECIALIST I, AIRPORT SAFETY OFFICER, ANESTHETIST, ANIMAL CARE ASSISTANT SUPERVISOR, ANIMAL CARE ATTENDANT, ANIMAL CARE SUPERVISOR, ANIMAL CONTROL OFFICER, ANIMAL HEALTH TECHNICIAN, ANIMAL KEEPER, APPRENTICE GARDENER, APPRENTICE STATIONARY ENGINEER, APPRENTICE STATIONARY ENGINEER, SEWAGE PLANT, APPRENTICE STATIONARY ENGINEER,WATER TREATMENT PLN, ARCHITECT, ARCHITECTURAL ADMINISTRATOR, ARCHITECTURAL ASSISTANT  I, ARCHITECTURAL ASSISTANT II, ARCHITECTURAL ASSOCIATE  I, ARCHITECTURAL ASSOCIATE II, AREA SUPERVISOR, PARKS, SQUARES AND FACILITIES, ARTS PROGRAM ASSISTANT, ASPHALT FINISHER, ASPHALT FINISHER SUPERVISOR I, ASPHALT PLANT SUPERVISOR I, ASPHALT WORKER, ASR Senior Office Specialist, ASR-Office Assistant, ASSESSMENT CLERK, ASSESSOR, ASSISTANT CHIEF ATTORNEY I, ASSISTANT CHIEF ATTORNEY II, ASSISTANT CHIEF DISTRICT ATTORNEY'S INVESTIGATOR, ASSISTANT CHIEF OF DEPARTMENT, (FIRE DEPARTMENT), ASSISTANT CHIEF VICTIM/WITNESS INVESTIGATOR, ASSISTANT CLERK, BOARD OF SUPERVISORS, ASSISTANT CONSTRUCTION INSPECTOR, ASSISTANT COOK, ASSISTANT COUNSELOR, ASSISTANT COURT REPORTER COORDINATOR, ASSISTANT DEPUTY CHIEF II, ASSISTANT DEPUTY DIRECTOR, PORT, ASSISTANT DIRECTOR OF CLINICAL SERVICES I, ASSISTANT DIRECTOR OF CLINICAL SERVICES II, ASSISTANT DIRECTOR, JUVENILE HALL, ASSISTANT DIRECTOR, LOG CABIN RANCH, ASSISTANT ELECTRONIC MAINTENANCE TECHNICIAN, ASSISTANT ENGINEER, ASSISTANT FORENSIC TOXICOLOGIST I, ASSISTANT GENERAL SERVICES MANAGER, ASSISTANT HEALTH EDUCATOR, ASSISTANT INDUSTRIAL HYGIENIST, ASSISTANT INSPECTOR (POLICE DEPARTMENT), ASSISTANT INSPECTOR II (POLICE DEPARTMENT), ASSISTANT INSPECTOR III (POLICE DEPARTMENT), ASSISTANT LAW LIBRARIAN, ASSISTANT MATERIALS COORDINATOR, ASSISTANT MEDICAL EXAMINER, ASSISTANT POWER HOUSE OPERATOR, ASSISTANT PURCHASER, ASSISTANT RECREATION DIRECTOR, ASSISTANT RECREATION SUPERVISOR, ASSISTANT RENTAL MANAGER, PORT, ASSISTANT RETIREMENT ANALYST, ASSISTANT SHERIFF, ASSISTANT STOREKEEPER, ASSISTANT SUPERINTENDENT RECREATION, ASSISTANT TO THE DIRECTOR, PUBLIC AFFAIRS       RS, ASSOCIATE AFFIRMATIVE ACTION COORDINATOR, ASSOCIATE AUDITOR, ASSOCIATE ENGINEER, ASSOCIATE HUMAN RESOURCES ANALYST, ASSOCIATE MUSEUM CONSERVATOR, ASIAN ART MUSEUM, ASSOCIATE MUSEUM REGISTRAR, ASSOCIATE PERFORMANCE AUDITOR, ASST. CHIEF PROBATION OFFICER-JUVENILE PROBATION, ...]
+
+[2159 rows x 0 columns]}
+2024-06-06 10:06:23 [INFO] Executing Step 8: ResultParsing
+2024-06-06 10:08:45 [INFO] Question: How are pay, overtime and benefits allocated between different groups?
+2024-06-06 10:08:45 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:08:45 [INFO] Prompt ID: 9c45d3a0-52a5-4c50-bdf2-b3e76ee69d68
+2024-06-06 10:08:45 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:08:45 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-06 10:08:45 [INFO] Executing Step 1: CacheLookup
+2024-06-06 10:08:45 [INFO] Using cached response
+2024-06-06 10:08:45 [INFO] Executing Step 2: PromptGeneration
+2024-06-06 10:08:45 [INFO] Executing Step 2: Skipping...
+2024-06-06 10:08:45 [INFO] Executing Step 3: CodeGenerator
+2024-06-06 10:08:45 [INFO] Executing Step 3: Skipping...
+2024-06-06 10:08:45 [INFO] Executing Step 4: CachePopulation
+2024-06-06 10:08:45 [INFO] Executing Step 4: Skipping...
+2024-06-06 10:08:45 [INFO] Executing Step 5: CodeCleaning
+2024-06-06 10:08:46 [INFO] 
+Code running:
+```
+Salaries = dfs[0]
+grouped_data = Salaries.groupby('JobTitle')[['BasePay', 'OvertimePay', 'Benefits']].sum()
+result = {'type': 'dataframe', 'value': grouped_data}
+        ```
+2024-06-06 10:08:46 [INFO] Executing Step 6: CodeExecution
+2024-06-06 10:08:47 [INFO] Executing Step 7: ResultValidation
+2024-06-06 10:08:47 [INFO] Answer: {'type': 'dataframe', 'value': Empty DataFrame
+Columns: []
+Index: [ACCOUNT CLERK, ACCOUNTANT, ACCOUNTANT INTERN, ACPO,JuvP, Juv Prob (SFERS), ACUPUNCTURIST, ADMINISTRATIVE ANALYST, ADMINISTRATIVE ANALYST II, ADMINISTRATIVE ANALYST III, ADMINISTRATIVE ENGINEER, ADMINISTRATIVE SERVICES MANAGER, ADMINISTRATOR, SFGH MEDICAL CENTER, AFFIRMATIVE ACTION SPECIALIST, AGRICULTURAL INSPECTOR, AIRPORT ASSISTANT DEPUTY DIRECTOR, BUSINESS ADMINI, AIRPORT ASSISTANT DEPUTY DIRECTOR, OPERATIONS, AIRPORT COMMUNICATIONS OPERATOR, AIRPORT COMMUNICATIONS SUPERVISOR, AIRPORT ECONOMIC PLANNER, AIRPORT ELECTRICIAN, AIRPORT ELECTRICIAN SUPERVISOR, AIRPORT EMERGENCY PLANNING COORDINATOR, AIRPORT MECHANICAL MAINTENANCE SUPERVISOR, AIRPORT NOISE ABATEMENT SPECIALIST, AIRPORT OPERATIONS SUPERVISOR, AIRPORT POLICE SERVICES AIDE, AIRPORT PROPERTY SPECIALIST I, AIRPORT SAFETY OFFICER, ANESTHETIST, ANIMAL CARE ASSISTANT SUPERVISOR, ANIMAL CARE ATTENDANT, ANIMAL CARE SUPERVISOR, ANIMAL CONTROL OFFICER, ANIMAL HEALTH TECHNICIAN, ANIMAL KEEPER, APPRENTICE GARDENER, APPRENTICE STATIONARY ENGINEER, APPRENTICE STATIONARY ENGINEER, SEWAGE PLANT, APPRENTICE STATIONARY ENGINEER,WATER TREATMENT PLN, ARCHITECT, ARCHITECTURAL ADMINISTRATOR, ARCHITECTURAL ASSISTANT  I, ARCHITECTURAL ASSISTANT II, ARCHITECTURAL ASSOCIATE  I, ARCHITECTURAL ASSOCIATE II, AREA SUPERVISOR, PARKS, SQUARES AND FACILITIES, ARTS PROGRAM ASSISTANT, ASPHALT FINISHER, ASPHALT FINISHER SUPERVISOR I, ASPHALT PLANT SUPERVISOR I, ASPHALT WORKER, ASR Senior Office Specialist, ASR-Office Assistant, ASSESSMENT CLERK, ASSESSOR, ASSISTANT CHIEF ATTORNEY I, ASSISTANT CHIEF ATTORNEY II, ASSISTANT CHIEF DISTRICT ATTORNEY'S INVESTIGATOR, ASSISTANT CHIEF OF DEPARTMENT, (FIRE DEPARTMENT), ASSISTANT CHIEF VICTIM/WITNESS INVESTIGATOR, ASSISTANT CLERK, BOARD OF SUPERVISORS, ASSISTANT CONSTRUCTION INSPECTOR, ASSISTANT COOK, ASSISTANT COUNSELOR, ASSISTANT COURT REPORTER COORDINATOR, ASSISTANT DEPUTY CHIEF II, ASSISTANT DEPUTY DIRECTOR, PORT, ASSISTANT DIRECTOR OF CLINICAL SERVICES I, ASSISTANT DIRECTOR OF CLINICAL SERVICES II, ASSISTANT DIRECTOR, JUVENILE HALL, ASSISTANT DIRECTOR, LOG CABIN RANCH, ASSISTANT ELECTRONIC MAINTENANCE TECHNICIAN, ASSISTANT ENGINEER, ASSISTANT FORENSIC TOXICOLOGIST I, ASSISTANT GENERAL SERVICES MANAGER, ASSISTANT HEALTH EDUCATOR, ASSISTANT INDUSTRIAL HYGIENIST, ASSISTANT INSPECTOR (POLICE DEPARTMENT), ASSISTANT INSPECTOR II (POLICE DEPARTMENT), ASSISTANT INSPECTOR III (POLICE DEPARTMENT), ASSISTANT LAW LIBRARIAN, ASSISTANT MATERIALS COORDINATOR, ASSISTANT MEDICAL EXAMINER, ASSISTANT POWER HOUSE OPERATOR, ASSISTANT PURCHASER, ASSISTANT RECREATION DIRECTOR, ASSISTANT RECREATION SUPERVISOR, ASSISTANT RENTAL MANAGER, PORT, ASSISTANT RETIREMENT ANALYST, ASSISTANT SHERIFF, ASSISTANT STOREKEEPER, ASSISTANT SUPERINTENDENT RECREATION, ASSISTANT TO THE DIRECTOR, PUBLIC AFFAIRS       RS, ASSOCIATE AFFIRMATIVE ACTION COORDINATOR, ASSOCIATE AUDITOR, ASSOCIATE ENGINEER, ASSOCIATE HUMAN RESOURCES ANALYST, ASSOCIATE MUSEUM CONSERVATOR, ASIAN ART MUSEUM, ASSOCIATE MUSEUM REGISTRAR, ASSOCIATE PERFORMANCE AUDITOR, ASST. CHIEF PROBATION OFFICER-JUVENILE PROBATION, ...]
+
+[2159 rows x 0 columns]}
+2024-06-06 10:08:47 [INFO] Executing Step 8: ResultParsing
+2024-06-06 10:08:48 [INFO] Question: How have salaries changed over time between differrent groups of people?
+2024-06-06 10:08:48 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:08:48 [INFO] Prompt ID: c2f769b2-1f35-4a5c-a990-042dc3c1895d
+2024-06-06 10:08:48 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:08:48 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-06 10:08:48 [INFO] Executing Step 1: CacheLookup
+2024-06-06 10:08:48 [INFO] Executing Step 2: PromptGeneration
+2024-06-06 10:08:49 [INFO] Using prompt: <dataframe name="Salaries">
+dfs[0]:148654x13
+Id,EmployeeName,JobTitle,BasePay,OvertimePay,OtherPay,Benefits,TotalPay,TotalPayBenefits,Year,Notes,Agency,Status
+102873,Priscilla  Abercrombie,Nurse Practitioner,29023.86,0.0,55.51,0.0,29079.37,29079.37,2013,,San Francisco,
+65593,Sandra Fallas,Eligibility Worker,17908.35,5438.61,592.29,6371.15,23939.25,30310.4,2012,,San Francisco,
+136587,Stephanie Y Miao,Medical Evaluations Assistant,49784.41,0.0,810.0,21356.26,50594.41,71950.67,2014,,San Francisco,FT
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+You can utilize these examples as a reference for generating code.
+
+Q: What are the top 5 countries by GDP?
+ A: 
+import pandas as pd
+
+df = dfs[0]
+
+# Convert GDP column to numeric values
+df['gdp'] = pd.to_numeric(df['gdp'])
+
+# Sort the DataFrame by GDP in descending order
+sorted_df = df.sort_values(by='gdp', ascending=False)
+
+# Get the top 5 countries by GDP
+top_5_countries = sorted_df.head(5)
+
+# Declare result variable
+result = {
+    "type": "dataframe",
+    "value": top_5_countries
+}
+
+
+
+
+### QUERY
+ How have salaries changed over time between differrent groups of people?
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-06-06 10:08:49 [INFO] Executing Step 3: CodeGenerator
+2024-06-06 10:08:54 [INFO] Prompt used:
+            None
+            
+2024-06-06 10:08:54 [INFO] Code generated:
+            ```
+            # Import the required dependencies
+import pandas as pd
+
+# Load the data into a DataFrame
+df = dfs[0]
+
+# Convert the 'BasePay', 'OvertimePay', 'OtherPay', and 'Benefits' columns to numeric values
+df['BasePay'] = pd.to_numeric(df['BasePay'])
+df['OvertimePay'] = pd.to_numeric(df['OvertimePay'])
+df['OtherPay'] = pd.to_numeric(df['OtherPay'])
+df['Benefits'] = pd.to_numeric(df['Benefits'])
+
+# Group the data by 'JobTitle' and 'Year' and calculate the mean salary for each group
+grouped_data = df.groupby(['JobTitle', 'Year']).agg({'BasePay': 'mean', 'OvertimePay': 'mean', 'OtherPay': 'mean', 'Benefits': 'mean'}).reset_index()
+
+# Declare the result variable as a DataFrame
+result = {
+    "type": "dataframe",
+    "value": grouped_data
+}
+            ```
+            
+2024-06-06 10:08:54 [INFO] Executing Step 4: CachePopulation
+2024-06-06 10:08:54 [INFO] Executing Step 5: CodeCleaning
+2024-06-06 10:08:54 [INFO] 
+Code running:
+```
+df = dfs[0]
+df['BasePay'] = pd.to_numeric(df['BasePay'])
+df['OvertimePay'] = pd.to_numeric(df['OvertimePay'])
+df['OtherPay'] = pd.to_numeric(df['OtherPay'])
+df['Benefits'] = pd.to_numeric(df['Benefits'])
+grouped_data = df.groupby(['JobTitle', 'Year']).agg({'BasePay': 'mean', 'OvertimePay': 'mean', 'OtherPay': 'mean', 'Benefits': 'mean'}).reset_index()
+result = {'type': 'dataframe', 'value': grouped_data}
+        ```
+2024-06-06 10:08:54 [INFO] Executing Step 6: CodeExecution
+2024-06-06 10:08:54 [ERROR] Failed with error: Traceback (most recent call last):
+  File "pandas\_libs\lib.pyx", line 2369, in pandas._libs.lib.maybe_convert_numeric
+ValueError: Unable to parse string "Not Provided"
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "x:\Repos\alejandromadrid\.pandasai-venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "x:\Repos\alejandromadrid\.pandasai-venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 171, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "x:\Repos\alejandromadrid\.pandasai-venv\lib\site-packages\pandas\core\tools\numeric.py", line 185, in to_numeric
+    values, _ = lib.maybe_convert_numeric(
+  File "pandas\_libs\lib.pyx", line 2411, in pandas._libs.lib.maybe_convert_numeric
+ValueError: Unable to parse string "Not Provided" at position 148646
+
+2024-06-06 10:08:54 [WARNING] Failed to execute code retrying with a correction framework [retry number: 1]
+2024-06-06 10:08:54 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-06-06 10:08:54 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-06-06 10:08:54 [INFO] Using prompt: <dataframe name="Salaries">
+dfs[0]:148654x13
+Id,EmployeeName,JobTitle,BasePay,OvertimePay,OtherPay,Benefits,TotalPay,TotalPayBenefits,Year,Notes,Agency,Status
+102873,Priscilla  Abercrombie,Nurse Practitioner,29023.86,0.0,55.51,0.0,29079.37,29079.37,2013,,San Francisco,
+65593,Sandra Fallas,Eligibility Worker,17908.35,5438.61,592.29,6371.15,23939.25,30310.4,2012,,San Francisco,
+136587,Stephanie Y Miao,Medical Evaluations Assistant,49784.41,0.0,810.0,21356.26,50594.41,71950.67,2014,,San Francisco,FT
+</dataframe>
+
+
+The user asked the following question:
+### QUERY
+ How are pay, overtime and benefits allocated between different groups?
+### ANSWER
+ Check it out: <dataframe>
+### QUERY
+ How have salaries changed over time between differrent groups of people?
+
+You generated this python code:
+df = dfs[0]
+df['BasePay'] = pd.to_numeric(df['BasePay'])
+df['OvertimePay'] = pd.to_numeric(df['OvertimePay'])
+df['OtherPay'] = pd.to_numeric(df['OtherPay'])
+df['Benefits'] = pd.to_numeric(df['Benefits'])
+grouped_data = df.groupby(['JobTitle', 'Year']).agg({'BasePay': 'mean', 'OvertimePay': 'mean', 'OtherPay': 'mean', 'Benefits': 'mean'}).reset_index()
+result = {'type': 'dataframe', 'value': grouped_data}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "pandas\_libs\lib.pyx", line 2369, in pandas._libs.lib.maybe_convert_numeric
+ValueError: Unable to parse string "Not Provided"
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "x:\Repos\alejandromadrid\.pandasai-venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(code_to_run, code_context)
+  File "x:\Repos\alejandromadrid\.pandasai-venv\lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 171, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "x:\Repos\alejandromadrid\.pandasai-venv\lib\site-packages\pandas\core\tools\numeric.py", line 185, in to_numeric
+    values, _ = lib.maybe_convert_numeric(
+  File "pandas\_libs\lib.pyx", line 2411, in pandas._libs.lib.maybe_convert_numeric
+ValueError: Unable to parse string "Not Provided" at position 148646
+
+
+Fix the python code above and return the new python code:
+2024-06-06 10:08:54 [INFO] Executing Step 1: CodeGenerator
+2024-06-06 10:08:58 [INFO] Prompt used:
+            None
+            
+2024-06-06 10:08:58 [INFO] Code generated:
+            ```
+            import pandas as pd
+
+df = dfs[0]
+df['BasePay'] = pd.to_numeric(df['BasePay'], errors='coerce')
+df['OvertimePay'] = pd.to_numeric(df['OvertimePay'], errors='coerce')
+df['OtherPay'] = pd.to_numeric(df['OtherPay'], errors='coerce')
+df['Benefits'] = pd.to_numeric(df['Benefits'], errors='coerce')
+grouped_data = df.groupby(['JobTitle', 'Year']).agg({'BasePay': 'mean', 'OvertimePay': 'mean', 'OtherPay': 'mean', 'Benefits': 'mean'}).reset_index()
+result = {'type': 'dataframe', 'value': grouped_data}
+            ```
+            
+2024-06-06 10:08:58 [INFO] Executing Step 2: CodeCleaning
+2024-06-06 10:08:58 [INFO] 
+Code running:
+```
+df = dfs[0]
+df['BasePay'] = pd.to_numeric(df['BasePay'], errors='coerce')
+df['OvertimePay'] = pd.to_numeric(df['OvertimePay'], errors='coerce')
+df['OtherPay'] = pd.to_numeric(df['OtherPay'], errors='coerce')
+df['Benefits'] = pd.to_numeric(df['Benefits'], errors='coerce')
+grouped_data = df.groupby(['JobTitle', 'Year']).agg({'BasePay': 'mean', 'OvertimePay': 'mean', 'OtherPay': 'mean', 'Benefits': 'mean'}).reset_index()
+result = {'type': 'dataframe', 'value': grouped_data}
+        ```
+2024-06-06 10:08:58 [INFO] Executing Step 7: ResultValidation
+2024-06-06 10:08:58 [INFO] Answer: {'type': 'dataframe', 'value':                                             JobTitle  Year       BasePay  \
+0                                      ACCOUNT CLERK  2011  43300.806506   
+1                                         ACCOUNTANT  2011  46643.172000   
+2                                  ACCOUNTANT INTERN  2011  28732.663958   
+3                        ACPO,JuvP, Juv Prob (SFERS)  2014  62290.780000   
+4                                      ACUPUNCTURIST  2011  66374.400000   
+...                                              ...   ...           ...   
+4132  YOUTH COMMISSION ADVISOR, BOARD OF SUPERVISORS  2011  52609.910000   
+4133                              Youth Comm Advisor  2012  57544.730000   
+4134                              Youth Comm Advisor  2013  33174.840000   
+4135                              Youth Comm Advisor  2014  32417.420000   
+4136                                     ZOO CURATOR  2011  43148.000000   
+
+      OvertimePay      OtherPay   Benefits  
+0      373.200843    361.656988        NaN  
+1        0.000000    786.096000        NaN  
+2       24.430625    274.648333        NaN  
+3        0.000000      0.000000  17975.590  
+4        0.000000   1220.000000        NaN  
+...           ...           ...        ...  
+4132     0.000000   1022.960000        NaN  
+4133     0.000000      0.000000  28229.660  
+4134     0.000000   2648.455000  15521.015  
+4135     0.000000   4048.490000  15545.280  
+4136     0.000000  23538.560000        NaN  
+
+[4137 rows x 6 columns]}
+2024-06-06 10:08:58 [INFO] Executing Step 8: ResultParsing
+2024-06-06 10:13:54 [INFO] Question: How are pay, overtime and benefits allocated between different groups?
+2024-06-06 10:13:54 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:13:54 [INFO] Prompt ID: 129a1c70-4476-4953-a703-cb594b417ada
+2024-06-06 10:13:54 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:13:54 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-06 10:13:54 [INFO] Executing Step 1: CacheLookup
+2024-06-06 10:13:54 [INFO] Using cached response
+2024-06-06 10:13:54 [INFO] Executing Step 2: PromptGeneration
+2024-06-06 10:13:54 [INFO] Executing Step 2: Skipping...
+2024-06-06 10:13:54 [INFO] Executing Step 3: CodeGenerator
+2024-06-06 10:13:54 [INFO] Executing Step 3: Skipping...
+2024-06-06 10:13:54 [INFO] Executing Step 4: CachePopulation
+2024-06-06 10:13:54 [INFO] Executing Step 4: Skipping...
+2024-06-06 10:13:54 [INFO] Executing Step 5: CodeCleaning
+2024-06-06 10:13:55 [INFO] 
+Code running:
+```
+Salaries = dfs[0]
+grouped_data = Salaries.groupby('JobTitle')[['BasePay', 'OvertimePay', 'Benefits']].sum()
+result = {'type': 'dataframe', 'value': grouped_data}
+        ```
+2024-06-06 10:13:55 [INFO] Executing Step 6: CodeExecution
+2024-06-06 10:13:56 [INFO] Executing Step 7: ResultValidation
+2024-06-06 10:13:56 [INFO] Answer: {'type': 'dataframe', 'value': Empty DataFrame
+Columns: []
+Index: [ACCOUNT CLERK, ACCOUNTANT, ACCOUNTANT INTERN, ACPO,JuvP, Juv Prob (SFERS), ACUPUNCTURIST, ADMINISTRATIVE ANALYST, ADMINISTRATIVE ANALYST II, ADMINISTRATIVE ANALYST III, ADMINISTRATIVE ENGINEER, ADMINISTRATIVE SERVICES MANAGER, ADMINISTRATOR, SFGH MEDICAL CENTER, AFFIRMATIVE ACTION SPECIALIST, AGRICULTURAL INSPECTOR, AIRPORT ASSISTANT DEPUTY DIRECTOR, BUSINESS ADMINI, AIRPORT ASSISTANT DEPUTY DIRECTOR, OPERATIONS, AIRPORT COMMUNICATIONS OPERATOR, AIRPORT COMMUNICATIONS SUPERVISOR, AIRPORT ECONOMIC PLANNER, AIRPORT ELECTRICIAN, AIRPORT ELECTRICIAN SUPERVISOR, AIRPORT EMERGENCY PLANNING COORDINATOR, AIRPORT MECHANICAL MAINTENANCE SUPERVISOR, AIRPORT NOISE ABATEMENT SPECIALIST, AIRPORT OPERATIONS SUPERVISOR, AIRPORT POLICE SERVICES AIDE, AIRPORT PROPERTY SPECIALIST I, AIRPORT SAFETY OFFICER, ANESTHETIST, ANIMAL CARE ASSISTANT SUPERVISOR, ANIMAL CARE ATTENDANT, ANIMAL CARE SUPERVISOR, ANIMAL CONTROL OFFICER, ANIMAL HEALTH TECHNICIAN, ANIMAL KEEPER, APPRENTICE GARDENER, APPRENTICE STATIONARY ENGINEER, APPRENTICE STATIONARY ENGINEER, SEWAGE PLANT, APPRENTICE STATIONARY ENGINEER,WATER TREATMENT PLN, ARCHITECT, ARCHITECTURAL ADMINISTRATOR, ARCHITECTURAL ASSISTANT  I, ARCHITECTURAL ASSISTANT II, ARCHITECTURAL ASSOCIATE  I, ARCHITECTURAL ASSOCIATE II, AREA SUPERVISOR, PARKS, SQUARES AND FACILITIES, ARTS PROGRAM ASSISTANT, ASPHALT FINISHER, ASPHALT FINISHER SUPERVISOR I, ASPHALT PLANT SUPERVISOR I, ASPHALT WORKER, ASR Senior Office Specialist, ASR-Office Assistant, ASSESSMENT CLERK, ASSESSOR, ASSISTANT CHIEF ATTORNEY I, ASSISTANT CHIEF ATTORNEY II, ASSISTANT CHIEF DISTRICT ATTORNEY'S INVESTIGATOR, ASSISTANT CHIEF OF DEPARTMENT, (FIRE DEPARTMENT), ASSISTANT CHIEF VICTIM/WITNESS INVESTIGATOR, ASSISTANT CLERK, BOARD OF SUPERVISORS, ASSISTANT CONSTRUCTION INSPECTOR, ASSISTANT COOK, ASSISTANT COUNSELOR, ASSISTANT COURT REPORTER COORDINATOR, ASSISTANT DEPUTY CHIEF II, ASSISTANT DEPUTY DIRECTOR, PORT, ASSISTANT DIRECTOR OF CLINICAL SERVICES I, ASSISTANT DIRECTOR OF CLINICAL SERVICES II, ASSISTANT DIRECTOR, JUVENILE HALL, ASSISTANT DIRECTOR, LOG CABIN RANCH, ASSISTANT ELECTRONIC MAINTENANCE TECHNICIAN, ASSISTANT ENGINEER, ASSISTANT FORENSIC TOXICOLOGIST I, ASSISTANT GENERAL SERVICES MANAGER, ASSISTANT HEALTH EDUCATOR, ASSISTANT INDUSTRIAL HYGIENIST, ASSISTANT INSPECTOR (POLICE DEPARTMENT), ASSISTANT INSPECTOR II (POLICE DEPARTMENT), ASSISTANT INSPECTOR III (POLICE DEPARTMENT), ASSISTANT LAW LIBRARIAN, ASSISTANT MATERIALS COORDINATOR, ASSISTANT MEDICAL EXAMINER, ASSISTANT POWER HOUSE OPERATOR, ASSISTANT PURCHASER, ASSISTANT RECREATION DIRECTOR, ASSISTANT RECREATION SUPERVISOR, ASSISTANT RENTAL MANAGER, PORT, ASSISTANT RETIREMENT ANALYST, ASSISTANT SHERIFF, ASSISTANT STOREKEEPER, ASSISTANT SUPERINTENDENT RECREATION, ASSISTANT TO THE DIRECTOR, PUBLIC AFFAIRS       RS, ASSOCIATE AFFIRMATIVE ACTION COORDINATOR, ASSOCIATE AUDITOR, ASSOCIATE ENGINEER, ASSOCIATE HUMAN RESOURCES ANALYST, ASSOCIATE MUSEUM CONSERVATOR, ASIAN ART MUSEUM, ASSOCIATE MUSEUM REGISTRAR, ASSOCIATE PERFORMANCE AUDITOR, ASST. CHIEF PROBATION OFFICER-JUVENILE PROBATION, ...]
+
+[2159 rows x 0 columns]}
+2024-06-06 10:13:56 [INFO] Executing Step 8: ResultParsing
+2024-06-06 10:16:46 [INFO] Question: what is the closing price for yesterday?
+2024-06-06 10:16:46 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:16:46 [INFO] Prompt ID: 3dc78294-9269-41d7-bc15-f058531dec82
+2024-06-06 10:16:46 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:16:49 [ERROR] MSFT: Period '3d' is invalid, must be one of ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']
+2024-06-06 10:16:49 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-06 10:16:49 [INFO] Executing Step 1: CacheLookup
+2024-06-06 10:16:49 [ERROR] Pipeline failed on step 1: Unable to find a usable engine; tried using: 'pyarrow', 'fastparquet'.
+A suitable version of pyarrow or fastparquet is required for parquet support.
+Trying to import the above resulted in these errors:
+ - Missing optional dependency 'pyarrow'. pyarrow is required for parquet support. Use pip or conda to install pyarrow.
+ - Missing optional dependency 'fastparquet'. fastparquet is required for parquet support. Use pip or conda to install fastparquet.
+2024-06-06 10:17:53 [INFO] Question: what is the closing price for yesterday?
+2024-06-06 10:17:53 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:17:53 [INFO] Prompt ID: 78cd145f-5043-4834-b605-ae20584e5ed6
+2024-06-06 10:17:53 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:17:53 [ERROR] MSFT: Period '3d' is invalid, must be one of ['1d', '5d', '1mo', '3mo', '6mo', '1y', '2y', '5y', '10y', 'ytd', 'max']
+2024-06-06 10:17:53 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-06 10:17:53 [INFO] Executing Step 1: CacheLookup
+2024-06-06 10:17:54 [INFO] Executing Step 2: PromptGeneration
+2024-06-06 10:17:55 [INFO] Using prompt: <dataframe>
+dfs[0]:9635x7
+Open,High,Low,Close,Adj Close,Volume
+</dataframe>
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+
+
+
+
+### QUERY
+ what is the closing price for yesterday?
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-06-06 10:17:55 [INFO] Executing Step 3: CodeGenerator
+2024-06-06 10:17:57 [INFO] Prompt used:
+            None
+            
+2024-06-06 10:17:57 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+df = dfs[0]
+
+# Get the closing price for yesterday (assuming the data is sorted by date)
+closing_price_yesterday = df['Close'].iloc[-2]  # Yesterday's closing price
+
+# Declare result var:
+result = {"type": "number", "value": closing_price_yesterday}
+            ```
+            
+2024-06-06 10:17:57 [INFO] Executing Step 4: CachePopulation
+2024-06-06 10:17:57 [INFO] Executing Step 5: CodeCleaning
+2024-06-06 10:17:57 [INFO] 
+Code running:
+```
+df = dfs[0]
+closing_price_yesterday = df['Close'].iloc[-2]
+result = {'type': 'number', 'value': closing_price_yesterday}
+        ```
+2024-06-06 10:17:57 [INFO] Executing Step 6: CodeExecution
+2024-06-06 10:17:57 [INFO] Executing Step 7: ResultValidation
+2024-06-06 10:17:57 [INFO] Answer: {'type': 'number', 'value': 416.07000732421875}
+2024-06-06 10:17:57 [INFO] Executing Step 8: ResultParsing
+2024-06-06 10:45:19 [INFO] Question: What's the number of cases for the disease? 
+2024-06-06 10:45:19 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-06 10:45:19 [INFO] Prompt ID: 7c69a542-d0b3-4adb-830b-f4d6c83c8dab
+2024-06-06 10:45:19 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-06 10:45:19 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-06 10:45:19 [INFO] Executing Step 1: CacheLookup
+2024-06-06 10:45:19 [INFO] Executing Step 2: PromptGeneration
