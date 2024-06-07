@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en"> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      id="p5scripttag"
+      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"
+      integrity="sha512-uaz5GpnQoE6t5echKlX8P52czvsIGgLPcvlzfvRubLZ1Hp8JemUDnbUiAahbVtPb+jUVrNETuXvAhDDF/N3M4w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <script>
+      const bgCol = "#F2F0E7";
+const accentCol = "#fd4578";
+
+hljs.initHighlightingOnLoad();
+
+const updateTargetDims = () => {
+  // width is max-width of `.contentContainer` - its padding
+  // return [min(windowWidth, 900 - 80), 700]
+  return [windowWidth * (1 / 2), windowHeight];
+};
+
+const setCodeAndPlan = (code, plan) => {
+  const codeElm = document.getElementById("code");
+  if (codeElm) {
+    // codeElm.innerText = code;
+    codeElm.innerHTML = hljs.highlight(code, { language: "python" }).value;
+  }
+
+  const planElm = document.getElementById("plan");
+  if (planElm) {
+    // planElm.innerText = plan.trim();
+    planElm.innerHTML = hljs.highlight(plan, { language: "plaintext" }).value;
+  }
+};
+
+windowResized = () => {
+  resizeCanvas(...updateTargetDims());
+  awaitingPostResizeOps = true;
+};
+
+const animEase = (t) => 1 - (1 - Math.min(t, 1.0)) ** 5;
+
+// ---- global constants ----
+
+const globalAnimSpeed = 1.1;
+const scaleFactor = 0.57;
+
+// ---- global vars ----
+
+let globalTime = 0;
+let manualSelection = false;
+
+let currentElemInd = 0;
+
+let treeStructData = {"edges": [], "layout": [[0.0, 0.0], [0.5, 0.0], [1.0, 0.0]], "plan": ["To tackle the problem of predicting diabetes status, I will use the\nRandomForestClassifier from scikit-learn because of its robustness and ability\nto handle both categorical and numerical data effectively. I will preprocess the\ndata by splitting the first dataset into an 80-20 train-test split to train and\nvalidate the model. The model's performance will be evaluated using RMSLE,\nf1-score, and accuracy. After training, the model will be tested on the second\ndataset to check its generalization on a balanced dataset. This approach should\nprovide a good balance between model complexity and predictive performance.", "To address the task of predicting diabetes status, I will use a\nRandomForestClassifier due to its robustness and ability to handle imbalances\nand interactions in dataset features effectively. I'll start by loading the\nfirst dataset, `diabetes_012_health_indicators_BRFSS2015.csv`, to split it into\ntraining (80%) and testing (20%) sets. The target variable will be\n`Diabetes_012`. Preprocessing will include scaling numerical features using\nStandardScaler to normalize the data, which is beneficial for many machine\nlearning models. After training the model on the training set, I'll evaluate its\nperformance using RMSLE, f1-score, and accuracy metrics on the testing set.\nFinally, I will apply the trained model to the second dataset,\n`diabetes_binary_5050split_health_indicators_BRFSS2015.csv`, and generate\npredictions which will be saved in `submission.csv` in the `./working`\ndirectory.", "To tackle the diabetes prediction task, I will employ a Logistic Regression\nmodel due to its simplicity and effectiveness in binary classification problems.\nThe plan involves first loading the\n`diabetes_012_health_indicators_BRFSS2015.csv` dataset, splitting it into an\n80-20 train-test split, and then preprocessing the data by scaling the features.\nThis will be followed by training the Logistic Regression model on the training\ndata. The model's performance will be evaluated on the test set using metrics\nsuch as RMSLE, F1-score, and accuracy. Finally, the trained model will be used\nto predict diabetes status on the\n`diabetes_binary_5050split_health_indicators_BRFSS2015.csv` dataset, and the\npredictions will be saved in `submission.csv`."], "code": ["import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import mean_squared_log_error, f1_score, accuracy_score\nimport numpy as np\n\n# Load the datasets\ndf = pd.read_csv(\"./input/diabetes_012_health_indicators_BRFSS2015.csv\")\ndf_binary = pd.read_csv(\n    \"./input/diabetes_binary_5050split_health_indicators_BRFSS2015.csv\"\n)\n\n# Prepare the data\nX = df.drop(\"Diabetes_012\", axis=1)\ny = df[\"Diabetes_012\"]\n\n# Splitting the dataset into train and test\nX_train, X_test, y_train, y_test = train_test_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Initialize and train the RandomForestClassifier\nmodel = RandomForestClassifier(random_state=42)\nmodel.fit(X_train, y_train)\n\n# Predict on the test set\ny_pred = model.predict(X_test)\n\n# Evaluate the model\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred))\nf1 = f1_score(y_test, y_pred, average=\"macro\")\nacc = accuracy_score(y_test, y_pred)\n\nprint(f\"RMSLE: {rmsle}\")\nprint(f\"F1 Score: {f1}\")\nprint(f\"Accuracy: {acc}\")\n\n# Prepare submission for the second dataset\nX_binary = df_binary.drop(\"Diabetes_binary\", axis=1)\ny_binary_pred = model.predict(X_binary)\n\n# Save the predictions to a CSV file\nsubmission_df = pd.DataFrame({\"Diabetes_binary\": y_binary_pred})\nsubmission_df.to_csv(\"./working/submission.csv\", index=False)\n", "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import mean_squared_log_error, f1_score, accuracy_score\nfrom sklearn.preprocessing import StandardScaler\nimport numpy as np\n\n# Load the datasets\ndf1 = pd.read_csv(\"./input/diabetes_012_health_indicators_BRFSS2015.csv\")\ndf2 = pd.read_csv(\"./input/diabetes_binary_5050split_health_indicators_BRFSS2015.csv\")\n\n# Prepare the first dataset\nX = df1.drop(\"Diabetes_012\", axis=1)\ny = df1[\"Diabetes_012\"]\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Scale the features\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\n# Train the RandomForest model\nmodel = RandomForestClassifier(random_state=42)\nmodel.fit(X_train_scaled, y_train)\n\n# Predict on the test set\ny_pred = model.predict(X_test_scaled)\n\n# Calculate the evaluation metrics\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred))\nf1 = f1_score(y_test, y_pred, average=\"macro\")\naccuracy = accuracy_score(y_test, y_pred)\n\nprint(f\"RMSLE: {rmsle}, F1-Score: {f1}, Accuracy: {accuracy}\")\n\n# Apply the model to the second dataset\nX_new = df2.drop(\"Diabetes_binary\", axis=1)\nX_new_scaled = scaler.transform(X_new)\ny_new_pred = model.predict(X_new_scaled)\n\n# Save the predictions\nsubmission = pd.DataFrame({\"Diabetes_binary\": y_new_pred})\nsubmission.to_csv(\"./working/submission.csv\", index=False)\n", "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.metrics import mean_squared_log_error, f1_score, accuracy_score\nimport numpy as np\n\n# Load the dataset\ndata = pd.read_csv(\"./input/diabetes_012_health_indicators_BRFSS2015.csv\")\n\n# Prepare the data\nX = data.drop([\"Diabetes_012\"], axis=1)\ny = data[\"Diabetes_012\"]\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Scale the features\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\n# Train the model\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train_scaled, y_train)\n\n# Predict on the test set\ny_pred = model.predict(X_test_scaled)\n\n# Calculate the metrics\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred))\nf1 = f1_score(y_test, y_pred, average=\"weighted\")\naccuracy = accuracy_score(y_test, y_pred)\n\nprint(f\"RMSLE: {rmsle}\")\nprint(f\"F1-score: {f1}\")\nprint(f\"Accuracy: {accuracy}\")\n\n# Prepare and save predictions on the second dataset\ndata_binary = pd.read_csv(\n    \"./input/diabetes_binary_5050split_health_indicators_BRFSS2015.csv\"\n)\nX_binary = data_binary.drop([\"Diabetes_binary\"], axis=1)\nX_binary_scaled = scaler.transform(X_binary)\ny_binary_pred = model.predict(X_binary_scaled)\n\n# Save the predictions\nsubmission = pd.DataFrame(y_binary_pred, columns=[\"Diabetes_binary\"])\nsubmission.to_csv(\"./working/submission.csv\", index=False)\n"], "term_out": ["Traceback (most recent call last):\n  File \"runfile.py\", line 18, in <module>\n    X_train, X_test, y_train, y_test = train_test_test_split(\nNameError: name 'train_test_test_split' is not defined. Did you mean: 'train_test_split'?\nExecution time: 2 seconds seconds (time limit is an hour).", "RMSLE: 0.42078933524206985, F1-Score: 0.3965432034760695, Accuracy: 0.8410990223904131\nExecution time: 25 seconds seconds (time limit is an hour).", "RMSLE: 0.41128364137441104\nF1-score: 0.8105866160421209\nAccuracy: 0.8482734153263954\nExecution time: 3 seconds seconds (time limit is an hour)."], "analysis": ["The code contains a typo in the function name for splitting the dataset. The correct function name should be 'train_test_split' instead of 'train_test_test_split'. To fix this bug, replace 'train_test_test_split' with 'train_test_split' in the code.", "The model achieved an RMSLE of 0.4208, an F1-score of 0.3965, and an accuracy of 0.8411 on the test set. These results indicate that while the model is fairly accurate in its predictions, the F1-score suggests there might be room for improvement in balancing the precision and recall, especially given the multi-class nature of the target variable.", "The model was successfully trained and evaluated on the first dataset with an RMSLE of 0.411, a weighted F1-score of 0.810, and an accuracy of 0.848. These results indicate a fairly good performance, especially considering the multi-class nature of the data. The model was also used to make predictions on a second binary dataset, but metrics for this dataset were not reported."], "exp_name": "2-ruddy-warping-bettong", "metrics": [0, 0, 0]}
+
+let lastClick = 0;
+let firstFrameTime = undefined;
+
+let nodes = [];
+let edges = [];
+
+let lastScrollPos = 0;
+
+setup = () => {
+  canvas = createCanvas(...updateTargetDims());
+};
+
+class Node {
+  x;
+  y;
+  size;
+  xT;
+  yT;
+  xB;
+  yB;
+  treeInd;
+  color;
+  relSize;
+  animationStart = Number.MAX_VALUE;
+  animationProgress = 0;
+  isStatic = false;
+  hasChildren = false;
+  isRootNode = true;
+  isStarred = false;
+  selected = false;
+  renderSize = 10;
+  edges = [];
+  bgCol;
+
+  constructor(x, y, relSize, treeInd) {
+    const minSize = 35;
+    const maxSize = 60;
+
+    const maxColor = 10;
+    const minColor = 125;
+
+    this.relSize = relSize;
+    this.treeInd = treeInd;
+    this.size = minSize + (maxSize - minSize) * relSize;
+    this.color = minColor + (maxColor - minColor) * relSize;
+    this.bgCol = Math.round(Math.max(this.color / 2, 0));
+
+    this.x = x;
+    this.y = y;
+    this.xT = x;
+    this.yT = y - this.size / 2;
+    this.xB = x;
+    this.yB = y + this.size / 2;
+
+    nodes.push(this);
+  }
+
+  startAnimation = (offset = 0) => {
+    if (this.animationStart == Number.MAX_VALUE)
+      this.animationStart = globalTime + offset;
+  };
+
+  child = (node) => {
+    let edge = new Edge(this, node);
+    this.edges.push(edge);
+    edges.push(edge);
+    this.hasChildren = true;
+    node.isRootNode = false;
+    return node;
+  };
+
+  render = () => {
+    if (globalTime - this.animationStart < 0) return;
+
+    const mouseXlocalCoords = (mouseX - width / 2) / scaleFactor;
+    const mouseYlocalCoords = (mouseY - height / 2) / scaleFactor;
+    const isMouseOver =
+      dist(mouseXlocalCoords, mouseYlocalCoords, this.x, this.y) <
+      this.renderSize / 1.5;
+    if (isMouseOver) cursor(HAND);
+    if (isMouseOver && mouseIsPressed) {
+      nodes.forEach((n) => (n.selected = false));
+      this.selected = true;
+      setCodeAndPlan(
+        treeStructData.code[this.treeInd],
+        treeStructData.plan[this.treeInd],
+      );
+      manualSelection = true;
+    }
+
+    this.renderSize = this.size;
+    if (!this.isStatic) {
+      this.animationProgress = animEase(
+        (globalTime - this.animationStart) / 1000,
+      );
+      if (this.animationProgress >= 1) {
+        this.isStatic = true;
+      } else {
+        this.renderSize =
+          this.size *
+          (0.8 +
+            0.2 *
+              (-3.33 * this.animationProgress ** 2 +
+                4.33 * this.animationProgress));
+      }
+    }
+
+    fill(this.color);
+    if (this.selected) {
+      fill(accentCol);
+    }
+
+    noStroke();
+    square(
+      this.x - this.renderSize / 2,
+      this.y - this.renderSize / 2,
+      this.renderSize,
+      10,
+    );
+
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(this.renderSize / 2);
+    fill(255);
+    // fill(lerpColor(color(accentCol), color(255), this.animationProgress))
+    text("{ }", this.x, this.y - 1);
+    // DEBUG PRINT:
+    // text(round(this.relSize, 2), this.x, this.y - 1)
+    // text(this.treeInd, this.x, this.y + 15)
+
+    const dotAnimThreshold = 0.85;
+    if (this.isStarred && this.animationProgress >= dotAnimThreshold) {
+      let dotAnimProgress =
+        (this.animationProgress - dotAnimThreshold) / (1 - dotAnimThreshold);
+      textSize(
+        ((-3.33 * dotAnimProgress ** 2 + 4.33 * dotAnimProgress) *
+          this.renderSize) /
+          2,
+      );
+      if (this.selected) {
+        fill(0);
+        stroke(0);
+      } else {
+        fill(accentCol);
+        stroke(accentCol);
+      }
+      strokeWeight((-(dotAnimProgress ** 2) + dotAnimProgress) * 2);
+      text("*", this.x + 20, this.y - 11);
+      noStroke();
+    }
+
+    if (!this.isStatic) {
+      fill(bgCol);
+      const progressAnimBaseSize = this.renderSize + 5;
+      rect(
+        this.x - progressAnimBaseSize / 2,
+        this.y -
+          progressAnimBaseSize / 2 +
+          progressAnimBaseSize * this.animationProgress,
+        progressAnimBaseSize,
+        progressAnimBaseSize * (1 - this.animationProgress),
+      );
+    }
+    if (this.animationProgress >= 0.9) {
+      this.edges
+        .sort((a, b) => a.color() - b.color())
+        .forEach((e, i) => {
+          e.startAnimation((i / this.edges.length) ** 2 * 1000);
+        });
+    }
+  };
+}
+
+class Edge {
+  nodeT;
+  nodeB;
+  animX = 0;
+  animY = 0;
+  animationStart = Number.MAX_VALUE;
+  animationProgress = 0;
+  isStatic = false;
+  weight = 0;
+
+  constructor(nodeT, nodeB) {
+    this.nodeT = nodeT;
+    this.nodeB = nodeB;
+    this.weight = 2 + nodeB.relSize * 1;
+  }
+
+  color = () => this.nodeB.color;
+
+  startAnimation = (offset = 0) => {
+    if (this.animationStart == Number.MAX_VALUE)
+      this.animationStart = globalTime + offset;
+  };
+
+  render = () => {
+    if (globalTime - this.animationStart < 0) return;
+
+    if (!this.isStatic) {
+      this.animationProgress = animEase(
+        (globalTime - this.animationStart) / 1000,
+      );
+      if (this.animationProgress >= 1) {
+        this.isStatic = true;
+        this.animX = this.nodeB.xT;
+        this.animY = this.nodeB.yT;
+      } else {
+        this.animX = bezierPoint(
+          this.nodeT.xB,
+          this.nodeT.xB,
+          this.nodeB.xT,
+          this.nodeB.xT,
+          this.animationProgress,
+        );
+
+        this.animY = bezierPoint(
+          this.nodeT.yB,
+          (this.nodeT.yB + this.nodeB.yT) / 2,
+          (this.nodeT.yB + this.nodeB.yT) / 2,
+          this.nodeB.yT,
+          this.animationProgress,
+        );
+      }
+    }
+    if (this.animationProgress >= 0.97) {
+      this.nodeB.startAnimation();
+    }
+
+    strokeWeight(this.weight);
+    noFill();
+    stroke(
+      lerpColor(color(bgCol), color(accentCol), this.nodeB.relSize * 1 + 0.7),
+    );
+    bezier(
+      this.nodeT.xB,
+      this.nodeT.yB,
+      this.nodeT.xB,
+      (this.nodeT.yB + this.nodeB.yT) / 2,
+      this.animX,
+      (this.nodeT.yB + this.nodeB.yT) / 2,
+      this.animX,
+      this.animY,
+    );
+  };
+}
+
+draw = () => {
+  cursor(ARROW);
+  frameRate(120);
+  if (!firstFrameTime && frameCount <= 1) {
+    firstFrameTime = millis();
+  }
+  // ---- update global animation state ----
+  const initialSpeedScalingEaseIO =
+    (cos(min((millis() - firstFrameTime) / 8000, 1.0) * PI) + 1) / 2;
+  const initialSpeedScalingEase =
+    (cos(min((millis() - firstFrameTime) / 8000, 1.0) ** (1 / 2) * PI) + 1) / 2;
+  const initAnimationSpeedFactor = 1.0 - 0.4 * initialSpeedScalingEaseIO;
+  // update global scaling-aware clock
+  globalTime += globalAnimSpeed * initAnimationSpeedFactor * deltaTime;
+
+  if (nodes.length == 0) {
+    const spacingHeight = height * 1.3;
+    const spacingWidth = width * 1.3;
+    treeStructData.layout.forEach((lay, index) => {
+      new Node(
+        spacingWidth * lay[0] - spacingWidth / 2,
+        20 + spacingHeight * lay[1] - spacingHeight / 2,
+        1 - treeStructData.metrics[index],
+        index,
+      );
+    });
+    treeStructData.edges.forEach((ind) => {
+      nodes[ind[0]].child(nodes[ind[1]]);
+    });
+    nodes.forEach((n) => {
+      if (n.isRootNode) n.startAnimation();
+    });
+    nodes[0].selected = true;
+    setCodeAndPlan(
+      treeStructData.code[0],
+      treeStructData.plan[0],
+    )
+  }
+
+  const staticNodes = nodes.filter(
+    (n) => n.isStatic || n.animationProgress >= 0.7,
+  );
+  if (staticNodes.length > 0) {
+    const largestNode = staticNodes.reduce((prev, current) =>
+      prev.relSize > current.relSize ? prev : current,
+    );
+    if (!manualSelection) {
+      if (!largestNode.selected) {
+        setCodeAndPlan(
+          treeStructData.code[largestNode.treeInd],
+          treeStructData.plan[largestNode.treeInd],
+        );
+      }
+      staticNodes.forEach((node) => {
+        node.selected = node === largestNode;
+      });
+    }
+  }
+  background(bgCol);
+  // global animation transforms
+  translate(width / 2, height / 2);
+  scale(scaleFactor);
+
+  
+  // ---- fg render ----
+  edges.forEach((e) => e.render());
+  nodes.forEach((n) => n.render());
+  
+};
+
+    </script>
+    <title>AIDE Run Visualization</title>
+    <style>
+      body,
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: scroll;
+      }
+      body {
+        background-color: #f2f0e7;
+      }
+      canvas {
+        float: left;
+        height: 100vh;
+        width: 40vw;
+      }
+      #text-container {
+        float: right;
+        height: 100vh;
+        width: 50vw;
+        background-color: #282c34;
+      }
+      #plan {
+        /* border-left: 2px solid #282c34; */
+        background-color: #282c34;
+        color: #f2f0e7;
+        min-height: 5rem;
+        padding: 1em 0 1em 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <pre
+      id="text-container"
+    ><div id="plan"></div><hr><code id="code" class="language-python"></code></pre>
+  </body>
+</html>
