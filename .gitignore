@@ -1,9 +1,7 @@
 # Eliminamos los ficheros que genera MAC al mover las carpetas
 .DS_Store
 # Eliminamos la carpeta del venv ya que pesa mucho y solo tenemos que instalarnos todo lo escrito en 'requierements.txt'
-.python-venv/
-.aide-venv/
-.pandasai-venv/
+.python-*-venv/
 # Eliminamos el fichero .env donde tenemos el fichero con las KEYS de las API
 .env-token
 # Eliminamos el directorio .vscode/ donde tenemos toda la configuración de nuestor editor de texto
