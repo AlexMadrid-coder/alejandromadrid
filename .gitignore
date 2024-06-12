@@ -13,5 +13,7 @@ pandasai.log
 # Libraries downloaded which don't have pip installer
 libs/
 saint/
-
-PythonTests/AIDEML/TEST/
+##  Eliminamos ciertas carpetas para que no pese demasiado el repositorio
+# AIDE-POTATO_DISEASES
+PlantVillage/
+PotatoPlants/
