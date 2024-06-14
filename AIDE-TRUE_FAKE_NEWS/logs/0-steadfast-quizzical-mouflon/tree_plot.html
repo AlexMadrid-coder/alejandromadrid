@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en"> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      id="p5scripttag"
+      src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"
+      integrity="sha512-uaz5GpnQoE6t5echKlX8P52czvsIGgLPcvlzfvRubLZ1Hp8JemUDnbUiAahbVtPb+jUVrNETuXvAhDDF/N3M4w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+
+    <script>
+      const bgCol = "#F2F0E7";
+const accentCol = "#fd4578";
+
+hljs.initHighlightingOnLoad();
+
+const updateTargetDims = () => {
+  // width is max-width of `.contentContainer` - its padding
+  // return [min(windowWidth, 900 - 80), 700]
+  return [windowWidth * (1 / 2), windowHeight];
+};
+
+const setCodeAndPlan = (code, plan) => {
+  const codeElm = document.getElementById("code");
+  if (codeElm) {
+    // codeElm.innerText = code;
+    codeElm.innerHTML = hljs.highlight(code, { language: "python" }).value;
+  }
+
+  const planElm = document.getElementById("plan");
+  if (planElm) {
+    // planElm.innerText = plan.trim();
+    planElm.innerHTML = hljs.highlight(plan, { language: "plaintext" }).value;
+  }
+};
+
+windowResized = () => {
+  resizeCanvas(...updateTargetDims());
+  awaitingPostResizeOps = true;
+};
+
+const animEase = (t) => 1 - (1 - Math.min(t, 1.0)) ** 5;
+
+// ---- global constants ----
+
+const globalAnimSpeed = 1.1;
+const scaleFactor = 0.57;
+
+// ---- global vars ----
+
+let globalTime = 0;
+let manualSelection = false;
+
+let currentElemInd = 0;
+
+let treeStructData = {"edges": [[4, 8], [4, 5], [5, 6], [6, 7], [8, 9]], "layout": [[0.0, 0.0], [0.2222222222222222, 0.0], [0.4444444444444444, 0.0], [0.6666666666666666, 0.0], [0.8888888888888888, 0.0], [0.7777777777777778, 0.33333333333333337], [0.7777777777777778, 0.6666666666666667], [0.7777777777777778, 1.0], [1.0, 0.33333333333333337], [1.0, 0.6666666666666667]], "plan": ["For the task of classifying fake and true news, I propose to use a simple\nmachine learning approach with a Logistic Regression model. The text data from\nthe news will be vectorized using TF-IDF (Term Frequency-Inverse Document\nFrequency) to convert the textual content into a numeric form that can be fed\ninto the logistic regression model. The 'text' column will be used as the main\nfeature for classification since it contains the body of the news articles. The\ndataset will be split into training and validation sets to train the model and\nevaluate its performance. Evaluation metrics will include RMSLE (Root Mean\nSquared Logarithmic Error), confusion matrix, and ROC Curve to assess the\nmodel's performance.", "For the task of classifying news articles as fake or true, I propose to utilize\na Naive Bayes classifier, which is a probabilistic classifier often used in text\nclassification due to its simplicity and effectiveness when dealing with large\ndatasets. The text data from the news articles will be processed and vectorized\nusing CountVectorizer, which converts the text data into a matrix of token\ncounts. This will serve as input for the Naive Bayes model. The dataset will be\nsplit into training and validation sets to both train the model and evaluate its\nperformance. The performance of the model will be evaluated using metrics such\nas RMSLE, confusion matrix, and ROC Curve.", "To address the task of classifying news articles as either fake or true, I will\nemploy a Support Vector Machine (SVM) classifier, which is effective in handling\nhigh-dimensional data and is robust against overfitting in text classification\ntasks. The text data from the news articles will be preprocessed to remove stop\nwords and vectorized using TF-IDF to transform the text into a suitable format\nfor the SVM. The dataset will be split into training and validation sets to\ntrain and evaluate the model respectively. The performance of the classifier\nwill be evaluated using Root Mean Squared Logarithmic Error (RMSLE), confusion\nmatrix, and ROC Curve.", "For the task of classifying news articles as fake or true, I will utilize a\nGradient Boosting Machine (GBM) model, specifically using the LightGBM\nframework. This technique is known for handling categorical features and large\ndatasets efficiently. The 'text' column from the news articles will be used as\nthe primary feature. Text data will be vectorized using the TF-IDF method to\ntransform textual information into numerical data suitable for the model. The\ndataset will be split into training and validation sets for training and model\nperformance evaluation. The model's effectiveness will be evaluated using RMSLE,\nconfusion matrix, and ROC Curve.", "To tackle the task of classifying news articles as fake or true, I propose to\nutilize a Random Forest classifier, which is effective for handling high-\ndimensional datasets and inherently performs feature selection. The 'text'\ncolumn, which contains the body of the news articles, will be preprocessed to\nremove common stopwords and vectorized using the TF-IDF method. This will\ntransform the textual data into a numeric format that the Random Forest model\ncan process. The dataset will be split into training and validation sets to\ntrain the model and evaluate its performance. The model's performance will be\nassessed using the RMSLE, confusion matrix, and ROC Curve.", "To enhance the current Random Forest model's performance, I propose to optimize\nthe hyperparameters of the RandomForestClassifier using GridSearchCV. This\nmethod will allow us to systematically explore combinations of parameters (like\n'n_estimators', 'max_depth', and 'min_samples_split') to find the best\nconfiguration that could improve the model's accuracy and generalization. This\napproach is expected to refine the model's ability to classify news articles\nmore accurately, potentially increasing the ROC AUC score and reducing RMSLE.", "The timeout error in the previous implementation likely occurred due to the\nextensive computation required by the large parameter grid in conjunction with a\ncomputationally expensive model like RandomForest. To resolve this, we can\nreduce the complexity of the parameter grid and limit the number of parameters\nbeing tuned simultaneously. Additionally, we can use a simpler model or reduce\nthe feature space dimension to speed up the process. This approach should help\nin completing the model training and evaluation within a reasonable time frame.\nI will also ensure that predictions are saved correctly for evaluation.", "The main issue in the provided script is the incorrect import statement for the\npandas library, which is mistakenly imported as 'are' instead of 'pd'. This\nleads to a NameError when trying to use 'pd' to read CSV files. To fix this, we\nneed to correct the import statement for pandas. Additionally, I'll ensure that\nall library imports are correct and the script is syntactically correct. After\nfixing these issues, the script should run successfully, allowing us to build a\nclassifier for fake and true news, evaluate it using RMSLE, confusion matrix,\nand ROC curve, and save the predictions.", "To improve the model's performance and generalization, we will increase the\nnumber of features in the TF-IDF vectorization from 5000 to 10000. This will\nallow the model to capture more textual nuances by considering a broader set of\nwords and potentially improve its ability to distinguish between fake and true\nnews. Increasing the number of features may capture more relevant information in\nthe text, which could lead to better classification accuracy and a lower RMSLE.", "The error in the previous implementation arises from an incorrect import\nstatement where `sklearn.model_model` is mistakenly used instead of\n`sklearn.model_selection`. This will be corrected to properly import\n`train_test_split`. Additionally, the RMSLE (Root Mean Squared Logarithmic\nError) is not typically used for classification tasks, but since it's specified\nin the task, we'll compute it using the predicted probabilities. The rest of the\ncode will remain largely unchanged, focusing on loading data, preparing features\nwith TF-IDF, training a RandomForestClassifier, and evaluating the model using\nRMSLE, confusion matrix, and ROC AUC. The results will be printed and the\npredictions saved as required."], "code": ["import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\nimport matplotlib.pyplot as plt\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Assign labels\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Prepare features and labels\nX = data[\"text\"]\ny = data[\"label\"]\n\n# Split data\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Vectorize text\nvectorizer = TfidfVectorizer(stop_words=\"english\", max_features=5000)\nX_train_tfidf = vectorizer.fit_transform(X_train)\nX_test_tfidf = vectorizer.transform(X_test)\n\n# Model\nmodel = LogisticRegression(max_iter=1000)\nmodel.fit(X_train_tfidf, y_train)\n\n# Predictions\ny_pred = model.predict(X_test_tfidf)\ny_pred_proba = model.predict_proba(X_test_tfidf)[:, 1]\n\n# Evaluation\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred))\nprint(\"RMSLE:\", rmsle)\n\n# Confusion Matrix\ncm = confusion_matrix(y_test, y_pred)\nprint(\"Confusion Matrix:\\n\", cm)\n\n# ROC Curve\nfpr, tpr, thresholds = roc_curve(y_test, y_pred_proba)\nroc_auc = auc(fpr, tpr)\nprint(\"ROC AUC:\", roc_auc)\n\n# Plot ROC Curve\nplt.figure()\nplt.plot(fpr, tpr, color=\"darkorange\", lw=2, label=\"ROC curve (area = %0.2f)\" % roc_auc)\nplt.plot([0, 1], [0, 1], color=\"navy\", lw=2, linestyle=\"--\")\nplt.xlim([0.0, 1.0])\nplt.ylim([0.0, 1.05])\nplt.xlabel(\"False Positive Rate\")\nplt.ylabel(\"True Positive Rate\")\nplt.title(\"Receiver Operating Characteristic\")\nplt.legend(loc=\"lower right\")\nplt.show()\n", "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.feature_extraction.text import CountVectorizer\nfrom sklearn.naive_bayes import MultinomialNB\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\n\n# Load the datasets\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Assign labels to the datasets\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\nnews = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Prepare the data\nX = news[\"text\"]\ny = news[\"label\"]\n\n# Split the data into training and validation sets\nX_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, random_state=42)\n\n# Vectorize the text data\nvectorizer = CountVectorizer()\nX_train_vec = vectorizer.fit_transform(X_train)\nX_val_vec = vectorizer.transform(X_val)\n\n# Initialize and train the Naive Bayes classifier\nmodel = MultinomialNB()\nmodel.fit(X_train_vec, y_train)\n\n# Predict on the validation set\ny_pred = model.predict(X_val_vec)\ny_pred_prob = model.predict_proba(X_val_vec)[:, 1]\n\n# Calculate RMSLE\nrmsle = np.sqrt(mean_squared_log_error(y_val, y_pred))\n\n# Calculate confusion matrix\nconf_matrix = confusion_matrix(y_val, y_pred)\n\n# Calculate ROC AUC\nfpr, tpr, _ = roc_curve(y_val, y_pred_prob)\nroc_auc = auc(fpr, tpr)\n\n# Print the evaluation metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n", "import pandas as pd\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.svm import SVC\nfrom sklearn.metrics import (\n    mean_squared_log_error,\n    confusion_matrix,\n    roc_auc_score,\n    roc_curve,\n)\nimport numpy as np\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Assign labels\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine datasets\nnews = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Prepare features and labels\nX = news[\"text\"]\ny = news[\"label\"]\n\n# Text vectorization\nvectorizer = TfidfVectorizer(stop_words=\"english\", max_features=5000)\nX_vectorized = vectorizer.fit_transform(X)\n\n# Split the data\nX_train, X_val, y_train, y_val = train_test_split(\n    X_vectorized, y, test_size=0.2, random_state=42\n)\n\n# SVM classifier\nsvm_classifier = SVC(kernel=\"linear\", probability=True)\nsvm_classifier.fit(X_train, y_train)\n\n# Predictions\ny_pred = svm_classifier.predict(X_val)\ny_pred_proba = svm_classifier.predict_proba(X_val)[:, 1]\n\n# Evaluation\nrmsle = np.sqrt(mean_squared_log_error(y_val, y_pred))\nconf_matrix = confusion_matrix(y_val, y_pred)\nroc_auc = roc_auc_score(y_val, y_pred_proba)\n\n# Print the evaluation metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n", "import pandas as pd\nimport numpy as np\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport lightgbm as lgb\n\n# Load the datasets\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Assign labels: 0 for fake, 1 for true\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Feature selection\nfeatures = data[\"text\"]\nlabels = data[\"label\"]\n\n# Text vectorization\ntfidf = TfidfVectorizer(stop_words=\"english\", max_features=10000)\nfeatures_tfidf = tfidf.fit_transform(features)\n\n# Split the dataset into training and validation sets\nX_train, X_val, y_train, y_val = train_test_split(\n    features_tfidf, labels, test_size=0.2, random_state=42\n)\n\n# Model training\nlgbm_model = lgb.LGBMClassifier()\nlgbm_model.fit(X_train, y_train)\n\n# Predictions\ny_pred_prob = lgbm_model.predict_proba(X_val)[:, 1]\ny_pred = np.where(y_pred_prob > 0.5, 1, 0)\n\n# Evaluation metrics\nrmsle = np.sqrt(mean_squared_log_error(y_val, y_pred_prob))\nconf_matrix = confusion_matrix(y_val, y_pred)\nfpr, tpr, _ = roc_curve(y_val, y_pred_prob)\nroc_auc = auc(fpr, tpr)\n\n# Print out the evaluation metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n", "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Label the data\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Select features and labels\nX = data[\"text\"]\ny = data[\"label\"]\n\n# Split the data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Vectorize the text data\ntfidf = TfidfVectorizer(stop_words=\"english\", max_features=5000)\nX_train_tfidf = tfidf.fit_transform(X_train)\nX_test_tfidf = tfidf.transform(X_test)\n\n# Initialize and train the Random Forest classifier\nrf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)\nrf_classifier.fit(X_train_tfidf, y_train)\n\n# Predict on the test set\ny_pred = rf_classifier.predict(X_test_tfidf)\ny_pred_proba = rf_classifier.predict_proba(X_test_tfidf)[:, 1]\n\n# Calculate RMSLE\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred_proba))\n\n# Calculate confusion matrix\nconf_matrix = confusion_matrix(y_test, y_pred)\n\n# Calculate ROC AUC\nfpr, tpr, _ = roc_curve(y_test, y_pred_proba)\nroc_auc = auc(fpr, tpr)\n\n# Print metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n\n# Save predictions for evaluation\npredictions = pd.DataFrame({\"True_Label\": y_test, \"Predicted_Label\": y_pred})\npredictions.to_csv(\"./working/submission.csv\", index=False)\n", "import pandas as pd\nfrom sklearn.model_selection import train_test_split, GridSearchCV\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Label the data\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Select features and labels\nX = data[\"text\"]\ny = data[\"label\"]\n\n# Split the data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Vectorize the text data\ntfidf = TfidfVectorizer(stop_words=\"english\", max_features=5000)\nX_train_tfidf = tfidf.fit_transform(X_train)\nX_test_tfidf = tfidf.transform(X_test)\n\n# Initialize the Random Forest classifier\nrf_classifier = RandomForestClassifier(random_state=42)\n\n# Set up the parameter grid\nparam_grid = {\n    \"n_estimators\": [100, 200, 300],\n    \"max_depth\": [None, 10, 20, 30],\n    \"min_samples_split\": [2, 5, 10],\n}\n\n# Initialize the GridSearchCV object\ngrid_search = GridSearchCV(\n    estimator=rf_classifier, param_grid=param_grid, cv=5, scoring=\"roc_auc\"\n)\n\n# Fit the grid search to the data\ngrid_search.fit(X_train_tfidf, y_train)\n\n# Best model\nbest_rf = grid_search.best_estimator_\n\n# Predict on the test set using the best model\ny_pred = best_rf.predict(X_test_tfidf)\ny_pred_proba = best_rf.predict_proba(X_test_tfidf)[:, 1]\n\n# Calculate RMSLE\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred_proba))\n\n# Calculate confusion matrix\nconf_matrix = confusion_matrix(y_test, y_pred)\n\n# Calculate ROC AUC\nfpr, tpr, _ = roc_curve(y_test, y_pred_proba)\nroc_auc = auc(fpr, tpr)\n\n# Print metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n\n# Save predictions for evaluation\npredictions = pd.DataFrame({\"True_Label\": y_test, \"Predicted_Label\": y_pred})\npredictions.to_csv(\"./working/submission.csv\", index=False)\n", "import pandas as are\nfrom sklearn.model_selection import train_test_split, GridSearchCV\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Label the data\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Select features and labels\nX = data[\"text\"]\ny = data[\"label\"]\n\n# Split the data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Vectorize the text data\ntfidf = TfidfVectorizer(stop_words=\"english\", max_features=3000)\nX_train_tfidf = tfidf.fit_transform(X_train)\nX_test_tfidf = tfidf.transform(X_test)\n\n# Initialize the Logistic Regression classifier\nlr_classifier = LogisticRegression(random_state=42)\n\n# Set up the parameter grid\nparam_grid = {\"C\": [0.1, 1, 10], \"solver\": [\"liblinear\"]}\n\n# Initialize the GridSearchCV object\ngrid_search = GridSearchCV(\n    estimator=lr_classifier, param_grid=param_grid, cv=5, scoring=\"roc_auc\"\n)\n\n# Fit the grid search to the data\ngrid_search.fit(X_train_tfidf, y_train)\n\n# Best model\nbest_lr = grid_search.best_estimator_\n\n# Predict on the test set using the best model\ny_pred = best_lr.predict(X_test_tfidf)\ny_pred_proba = best_lr.predict_proba(X_test_tfidf)[:, 1]\n\n# Calculate RMSLE\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred_proba))\n\n# Calculate confusion matrix\nconf_matrix = confusion_matrix(y_test, y_pred)\n\n# Calculate ROC AUC\nfpr, tpr, _ = roc_curve(y_test, y_pred_proba)\nroc_auc = auc(fpr, tpr)\n\n# Print metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n\n# Save predictions for evaluation\npredictions = pd.DataFrame({\"True_Label\": y_test, \"Predicted_Label\": y_pred})\npredictions.to_csv(\"./working/submission.csv\", index=False)\n", "import pandas as pd\nfrom sklearn.model_selection import train_test_split, GridSearchCV\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Label the data\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Select features and labels\nX = data[\"text\"]\ny = data[\"label\"]\n\n# Split the data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Vectorize the text data\ntfidf = TfidfVectorizer(stop_words=\"english\", max_features=3000)\nX_train_tfidf = tfidf.fit_transform(X_train)\nX_test_tfidf = tfidf.transform(X_test)\n\n# Initialize the Logistic Regression classifier\nlr_classifier = LogisticRegression(random_state=42)\n\n# Set up the parameter grid\nparam_grid = {\"C\": [0.1, 1, 10], \"solver\": [\"liblinear\"]}\n\n# Initialize the GridSearchCV object\ngrid_search = GridSearchCV(\n    estimator=lr_classifier, param_grid=param_grid, cv=5, scoring=\"roc_auc\"\n)\n\n# Fit the grid search to the data\ngrid_search.fit(X_train_tfidf, y_train)\n\n# Best model\nbest_lr = grid_search.best_estimator_\n\n# Predict on the test set using the best model\ny_pred = best_lr.predict(X_test_tfidf)\ny_pred_proba = best_lr.predict_proba(X_test_tfidf)[:, 1]\n\n# Calculate RMSLE\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred_proba))\n\n# Calculate confusion matrix\nconf_matrix = confusion_matrix(y_test, y_pred)\n\n# Calculate ROC AUC\nfpr, tpr, _ = roc_curve(y_test, y_pred_proba)\nroc_auc = auc(fpr, tpr)\n\n# Print metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n\n# Save predictions for evaluation\npredictions = pd.DataFrame({\"True_Label\": y_test, \"Predicted_Label\": y_pred})\npredictions.to_csv(\"./working/submission.csv\", index=False)\n", "import pandas as pd\nfrom sklearn.model_model import train_test_split\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Label the data\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Select features and labels\nX = data[\"text\"]\ny = data[\"label\"]\n\n# Split the data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Vectorize the text data\ntfidf = TfidfVectorizer(stop_words=\"english\", max_features=10000)\nX_train_tfidf = tfidf.fit_transform(X_train)\nX_test_tfidf = tfidf.transform(X_test)\n\n# Initialize and train the Random Forest classifier\nrf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)\nrf_classifier.fit(X_train_tfidf, y_train)\n\n# Predict on the test set\ny_pred = rf_classifier.predict(X_test_tfidf)\ny_pred_proba = rf_classifier.predict_proba(X_test_tfidf)[:, 1]\n\n# Calculate RMSLE\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred_proba))\n\n# Calculate confusion matrix\nconf_matrix = confusion_matrix(y_test, y_pred)\n\n# Calculate ROC AUC\nfpr, tpr, _ = roc_curve(y_test, y_pred_proba)\nroc_auc = auc(fpr, tpr)\n\n# Print metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n\n# Save predictions for evaluation\npredictions = pd.DataFrame({\"True_Label\": y_test, \"Predicted_Label\": y_pred})\npredictions.to_csv(\"./working/submission.csv\", index=False)\n", "import pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import mean_squared_log_error, confusion_matrix, roc_curve, auc\nimport numpy as np\n\n# Load data\nfake_news = pd.read_csv(\"./input/Fake.csv\")\ntrue_news = pd.read_csv(\"./input/True.csv\")\n\n# Label the data\nfake_news[\"label\"] = 0\ntrue_news[\"label\"] = 1\n\n# Combine the datasets\ndata = pd.concat([fake_news, true_news], ignore_index=True)\n\n# Select features and labels\nX = data[\"text\"]\ny = data[\"label\"]\n\n# Split the data into training and testing sets\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Vectorize the text data\ntfidf = TfidfVectorizer(stop_words=\"english\", max_features=10000)\nX_train_tfidf = tfidf.fit_transform(X_train)\nX_test_tfidf = tfidf.transform(X_test)\n\n# Initialize and train the Random Forest classifier\nrf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)\nrf_classifier.fit(X_train_tfidf, y_train)\n\n# Predict on the test set\ny_pred = rf_classifier.predict(X_test_tfidf)\ny_pred_proba = rf_classifier.predict_proba(X_test_tfidf)[:, 1]\n\n# Calculate RMSLE\nrmsle = np.sqrt(mean_squared_log_error(y_test, y_pred_proba))\n\n# Calculate confusion matrix\nconf_matrix = confusion_matrix(y_test, y_pred)\n\n# Calculate ROC AUC\nfpr, tpr, _ = roc_curve(y_test, y_pred_proba)\nroc_auc = auc(fpr, tpr)\n\n# Print metrics\nprint(\"RMSLE:\", rmsle)\nprint(\"Confusion Matrix:\\n\", conf_matrix)\nprint(\"ROC AUC:\", roc_auc)\n\n# Save predictions for evaluation\npredictions = pd.DataFrame({\"True_Label\": y_test, \"Predicted_Label\": y_pred})\npredictions.to_csv(\"./working/submission.csv\", index=False)\n"], "term_out": ["RMSLE: 0.08079178585258223\nConfusion Matrix:\n [[4662   71]\n [  51 4196]]\nROC AUC: 0.9982328784698871\nFigure(640x480)\nExecution time: 37 seconds seconds (time limit is an hour).", "RMSLE: 0.15150115326283006\nConfusion Matrix:\n [[4511  222]\n [ 207 4040]]\nROC AUC: 0.9770561002009299\nExecution time: 15 seconds seconds (time limit is an hour).", "RMSLE: 0.057128419640532266\nConfusion Matrix:\n [[4694   39]\n [  22 4225]]\nROC AUC: 0.999120991235732\nExecution time: 37 minutes seconds (time limit is an hour).", "[LightGBM] [Info] Number of positive: 17170, number of negative: 18748\n[LightGBM] [Info] Auto-choosing col-wise multi-threading, the overhead of testing was 1.042816 seconds.\nYou can set `force_col_wise=true` to remove the overhead.\n[LightGBM] [Info] Total Bins 981205\n[LightGBM] [Info] Number of data points in the train set: 35918, number of used features: 9965\n[LightGBM] [Info] [binary:BoostFromScore]: pavg=0.478033 -> initscore=-0.087923\n[LightGBM] [Info] Start training from score -0.087923\nRMSLE: 0.03327219676105066\nConfusion Matrix:\n [[4718   15]\n [   6 4241]]\nROC AUC: 0.9995411185216136\nExecution time: 34 seconds seconds (time limit is an hour).", "RMSLE: 0.08802924041547952\nConfusion Matrix:\n [[4719   14]\n [  11 4236]]\nROC AUC: 0.9996860860658481\nExecution time: a minute seconds (time limit is an hour).", "Traceback (most recent call last):\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/AIDE/interpreter.py\", line 139, in _run_session\n    exec(compile(code, self.agent_file_name, \"exec\"), global_scope)\n  File \"runfile.py\", line 49, in <module>\n    grid_search.fit(X_train_tfidf, y_train)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/model_selection/_search.py\", line 874, in fit\n    self._run_search(evaluate_candidates)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/model_selection/_search.py\", line 1388, in _run_search\n    evaluate_candidates(ParameterGrid(self.param_grid))\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/model_selection/_search.py\", line 821, in evaluate_candidates\n    out = parallel(\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/utils/parallel.py\", line 63, in __call__\n    return super().__call__(iterable_with_config)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/joblib/parallel.py\", line 1918, in __call__\n    return output if self.return_generator else list(output)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/joblib/parallel.py\", line 1847, in _get_sequential_output\n    res = func(*args, **kwargs)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/utils/parallel.py\", line 123, in __call__\n    return self.function(*args, **kwargs)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/model_selection/_validation.py\", line 686, in _fit_and_score\n    estimator.fit(X_train, y_train, **fit_params)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/ensemble/_forest.py\", line 473, in fit\n    trees = Parallel(\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/utils/parallel.py\", line 63, in __call__\n    return super().__call__(iterable_with_config)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/joblib/parallel.py\", line 1918, in __call__\n    return output if self.return_generator else list(output)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/joblib/parallel.py\", line 1847, in _get_sequential_output\n    res = func(*args, **kwargs)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/utils/parallel.py\", line 123, in __call__\n    return self.function(*args, **kwargs)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/ensemble/_forest.py\", line 184, in _parallel_build_trees\n    tree.fit(X, y, sample_weight=curr_sample_weight, check_input=False)\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/tree/_classes.py\", line 889, in fit\n    super().fit(\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/sklearn/tree/_classes.py\", line 379, in fit\n    builder.build(self.tree_, X, y, sample_weight)\nKeyboardInterrupt\nTimeoutError: Execution exceeded the time limit of an hour", "Traceback (most recent call last):\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/AIDE/interpreter.py\", line 139, in _run_session\n    exec(compile(code, self.agent_file_name, \"exec\"), global_scope)\n  File \"runfile.py\", line 9, in <module>\n    fake_news = pd.read_csv(\"./input/Fake.csv\")\nNameError: name 'pd' is not defined\nExecution time: a second seconds (time limit is an hour).", "RMSLE: 0.05930630459774185\nConfusion Matrix:\n [[4704   29]\n [  35 4212]]\nROC AUC: 0.998990998032889\nExecution time: 24 seconds seconds (time limit is an hour).", "Traceback (most recent call last):\n  File \"/Users/alejandro/Documents/Repositorios/alejandromadrid/.python-aide-venv/lib/python3.10/site-packages/AIDE/interpreter.py\", line 139, in _run_session\n    exec(compile(code, self.agent_file_name, \"exec\"), global_scope)\n  File \"runfile.py\", line 2, in <module>\n    from sklearn.model_model import train_test_split\nModuleNotFoundError: No module named 'sklearn.model_model'\nExecution time: a moment seconds (time limit is an hour).", "RMSLE: 0.09801781382743116\nConfusion Matrix:\n [[4718   15]\n [  18 4229]]\nROC AUC: 0.9996561871317076\nExecution time: a minute seconds (time limit is an hour)."], "analysis": ["The classifier for distinguishing between fake and true news performed excellently. The RMSLE of 0.0808 indicates a low error rate in the logarithmic scale of predictions. The confusion matrix shows a high number of correct predictions with minimal false positives and negatives. The ROC AUC of 0.9982 is near perfect, suggesting that the model can accurately discriminate between the classes.", "The classifier for distinguishing between fake and true news achieved a Root Mean Squared Logarithmic Error (RMSLE) of 0.1515, which indicates a relatively low error in prediction. The confusion matrix shows a good balance between true positives and true negatives, with minor misclassifications. The ROC AUC value of 0.9771 suggests that the model has an excellent ability to discriminate between the two classes.", "The classifier has performed exceptionally well in distinguishing between fake and true news. The RMSLE is quite low at 0.0571, indicating minor prediction errors on a logarithmic scale. The confusion matrix shows a high number of true positives and true negatives with minimal false positives and negatives. The ROC AUC score is nearly perfect at 0.9991, demonstrating excellent model performance.", "The classifier built for distinguishing between fake and true news has performed exceptionally well. The RMSLE is very low at 0.033, indicating minimal error in the logarithm of the predicted probabilities. The confusion matrix shows a high number of true positives and true negatives with very few false positives and negatives. The ROC AUC score is near perfect at 0.9995, suggesting excellent model performance.", "The classifier built for distinguishing between fake and true news has shown excellent performance. The RMSLE is quite low at 0.088, indicating minor prediction errors on a logarithmic scale. The confusion matrix reveals a high number of true positives and true negatives with very few false positives and negatives, demonstrating strong classification ability. The ROC AUC score is nearly perfect at 0.9997, reflecting the classifier's excellent ability to discriminate between the classes.", "The code execution resulted in a KeyboardInterrupt due to a TimeoutError, indicating that the execution exceeded the time limit of an hour. This likely occurred during the grid search process, which can be computationally intensive. To address this, consider reducing the parameter grid size, using a less complex model, or increasing the computational resources.", "The code execution failed due to a typo in the import statement. The pandas library is incorrectly referenced as 'are' instead of 'pd'. To fix this bug, the import statement should be corrected to 'import pandas as pd'.", "The classifier for distinguishing between fake and true news performed very well. The RMSLE value is 0.0593, indicating a low error rate in the probability estimates. The ROC AUC score is approximately 0.999, suggesting excellent discriminative ability. The confusion matrix shows very few misclassifications, further confirming the model's effectiveness.", "The code contains an import error where it tries to import 'train_test_split' from 'sklearn.model_model' instead of 'sklearn.model_selection'. To fix this, replace 'from sklearn.model_model import train_test_split' with 'from sklearn.model_selection import train_test_split'.", "The classifier for distinguishing between fake and true news performed exceptionally well. The RMSLE of 0.098 indicates a low error rate in logarithmic terms, while the ROC AUC of 0.9996 suggests excellent separability between the classes. The confusion matrix further confirms the high accuracy with very few misclassifications."], "exp_name": "0-steadfast-quizzical-mouflon", "metrics": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
+
+let lastClick = 0;
+let firstFrameTime = undefined;
+
+let nodes = [];
+let edges = [];
+
+let lastScrollPos = 0;
+
+setup = () => {
+  canvas = createCanvas(...updateTargetDims());
+};
+
+class Node {
+  x;
+  y;
+  size;
+  xT;
+  yT;
+  xB;
+  yB;
+  treeInd;
+  color;
+  relSize;
+  animationStart = Number.MAX_VALUE;
+  animationProgress = 0;
+  isStatic = false;
+  hasChildren = false;
+  isRootNode = true;
+  isStarred = false;
+  selected = false;
+  renderSize = 10;
+  edges = [];
+  bgCol;
+
+  constructor(x, y, relSize, treeInd) {
+    const minSize = 35;
+    const maxSize = 60;
+
+    const maxColor = 10;
+    const minColor = 125;
+
+    this.relSize = relSize;
+    this.treeInd = treeInd;
+    this.size = minSize + (maxSize - minSize) * relSize;
+    this.color = minColor + (maxColor - minColor) * relSize;
+    this.bgCol = Math.round(Math.max(this.color / 2, 0));
+
+    this.x = x;
+    this.y = y;
+    this.xT = x;
+    this.yT = y - this.size / 2;
+    this.xB = x;
+    this.yB = y + this.size / 2;
+
+    nodes.push(this);
+  }
+
+  startAnimation = (offset = 0) => {
+    if (this.animationStart == Number.MAX_VALUE)
+      this.animationStart = globalTime + offset;
+  };
+
+  child = (node) => {
+    let edge = new Edge(this, node);
+    this.edges.push(edge);
+    edges.push(edge);
+    this.hasChildren = true;
+    node.isRootNode = false;
+    return node;
+  };
+
+  render = () => {
+    if (globalTime - this.animationStart < 0) return;
+
+    const mouseXlocalCoords = (mouseX - width / 2) / scaleFactor;
+    const mouseYlocalCoords = (mouseY - height / 2) / scaleFactor;
+    const isMouseOver =
+      dist(mouseXlocalCoords, mouseYlocalCoords, this.x, this.y) <
+      this.renderSize / 1.5;
+    if (isMouseOver) cursor(HAND);
+    if (isMouseOver && mouseIsPressed) {
+      nodes.forEach((n) => (n.selected = false));
+      this.selected = true;
+      setCodeAndPlan(
+        treeStructData.code[this.treeInd],
+        treeStructData.plan[this.treeInd],
+      );
+      manualSelection = true;
+    }
+
+    this.renderSize = this.size;
+    if (!this.isStatic) {
+      this.animationProgress = animEase(
+        (globalTime - this.animationStart) / 1000,
+      );
+      if (this.animationProgress >= 1) {
+        this.isStatic = true;
+      } else {
+        this.renderSize =
+          this.size *
+          (0.8 +
+            0.2 *
+              (-3.33 * this.animationProgress ** 2 +
+                4.33 * this.animationProgress));
+      }
+    }
+
+    fill(this.color);
+    if (this.selected) {
+      fill(accentCol);
+    }
+
+    noStroke();
+    square(
+      this.x - this.renderSize / 2,
+      this.y - this.renderSize / 2,
+      this.renderSize,
+      10,
+    );
+
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(this.renderSize / 2);
+    fill(255);
+    // fill(lerpColor(color(accentCol), color(255), this.animationProgress))
+    text("{ }", this.x, this.y - 1);
+    // DEBUG PRINT:
+    // text(round(this.relSize, 2), this.x, this.y - 1)
+    // text(this.treeInd, this.x, this.y + 15)
+
+    const dotAnimThreshold = 0.85;
+    if (this.isStarred && this.animationProgress >= dotAnimThreshold) {
+      let dotAnimProgress =
+        (this.animationProgress - dotAnimThreshold) / (1 - dotAnimThreshold);
+      textSize(
+        ((-3.33 * dotAnimProgress ** 2 + 4.33 * dotAnimProgress) *
+          this.renderSize) /
+          2,
+      );
+      if (this.selected) {
+        fill(0);
+        stroke(0);
+      } else {
+        fill(accentCol);
+        stroke(accentCol);
+      }
+      strokeWeight((-(dotAnimProgress ** 2) + dotAnimProgress) * 2);
+      text("*", this.x + 20, this.y - 11);
+      noStroke();
+    }
+
+    if (!this.isStatic) {
+      fill(bgCol);
+      const progressAnimBaseSize = this.renderSize + 5;
+      rect(
+        this.x - progressAnimBaseSize / 2,
+        this.y -
+          progressAnimBaseSize / 2 +
+          progressAnimBaseSize * this.animationProgress,
+        progressAnimBaseSize,
+        progressAnimBaseSize * (1 - this.animationProgress),
+      );
+    }
+    if (this.animationProgress >= 0.9) {
+      this.edges
+        .sort((a, b) => a.color() - b.color())
+        .forEach((e, i) => {
+          e.startAnimation((i / this.edges.length) ** 2 * 1000);
+        });
+    }
+  };
+}
+
+class Edge {
+  nodeT;
+  nodeB;
+  animX = 0;
+  animY = 0;
+  animationStart = Number.MAX_VALUE;
+  animationProgress = 0;
+  isStatic = false;
+  weight = 0;
+
+  constructor(nodeT, nodeB) {
+    this.nodeT = nodeT;
+    this.nodeB = nodeB;
+    this.weight = 2 + nodeB.relSize * 1;
+  }
+
+  color = () => this.nodeB.color;
+
+  startAnimation = (offset = 0) => {
+    if (this.animationStart == Number.MAX_VALUE)
+      this.animationStart = globalTime + offset;
+  };
+
+  render = () => {
+    if (globalTime - this.animationStart < 0) return;
+
+    if (!this.isStatic) {
+      this.animationProgress = animEase(
+        (globalTime - this.animationStart) / 1000,
+      );
+      if (this.animationProgress >= 1) {
+        this.isStatic = true;
+        this.animX = this.nodeB.xT;
+        this.animY = this.nodeB.yT;
+      } else {
+        this.animX = bezierPoint(
+          this.nodeT.xB,
+          this.nodeT.xB,
+          this.nodeB.xT,
+          this.nodeB.xT,
+          this.animationProgress,
+        );
+
+        this.animY = bezierPoint(
+          this.nodeT.yB,
+          (this.nodeT.yB + this.nodeB.yT) / 2,
+          (this.nodeT.yB + this.nodeB.yT) / 2,
+          this.nodeB.yT,
+          this.animationProgress,
+        );
+      }
+    }
+    if (this.animationProgress >= 0.97) {
+      this.nodeB.startAnimation();
+    }
+
+    strokeWeight(this.weight);
+    noFill();
+    stroke(
+      lerpColor(color(bgCol), color(accentCol), this.nodeB.relSize * 1 + 0.7),
+    );
+    bezier(
+      this.nodeT.xB,
+      this.nodeT.yB,
+      this.nodeT.xB,
+      (this.nodeT.yB + this.nodeB.yT) / 2,
+      this.animX,
+      (this.nodeT.yB + this.nodeB.yT) / 2,
+      this.animX,
+      this.animY,
+    );
+  };
+}
+
+draw = () => {
+  cursor(ARROW);
+  frameRate(120);
+  if (!firstFrameTime && frameCount <= 1) {
+    firstFrameTime = millis();
+  }
+  // ---- update global animation state ----
+  const initialSpeedScalingEaseIO =
+    (cos(min((millis() - firstFrameTime) / 8000, 1.0) * PI) + 1) / 2;
+  const initialSpeedScalingEase =
+    (cos(min((millis() - firstFrameTime) / 8000, 1.0) ** (1 / 2) * PI) + 1) / 2;
+  const initAnimationSpeedFactor = 1.0 - 0.4 * initialSpeedScalingEaseIO;
+  // update global scaling-aware clock
+  globalTime += globalAnimSpeed * initAnimationSpeedFactor * deltaTime;
+
+  if (nodes.length == 0) {
+    const spacingHeight = height * 1.3;
+    const spacingWidth = width * 1.3;
+    treeStructData.layout.forEach((lay, index) => {
+      new Node(
+        spacingWidth * lay[0] - spacingWidth / 2,
+        20 + spacingHeight * lay[1] - spacingHeight / 2,
+        1 - treeStructData.metrics[index],
+        index,
+      );
+    });
+    treeStructData.edges.forEach((ind) => {
+      nodes[ind[0]].child(nodes[ind[1]]);
+    });
+    nodes.forEach((n) => {
+      if (n.isRootNode) n.startAnimation();
+    });
+    nodes[0].selected = true;
+    setCodeAndPlan(
+      treeStructData.code[0],
+      treeStructData.plan[0],
+    )
+  }
+
+  const staticNodes = nodes.filter(
+    (n) => n.isStatic || n.animationProgress >= 0.7,
+  );
+  if (staticNodes.length > 0) {
+    const largestNode = staticNodes.reduce((prev, current) =>
+      prev.relSize > current.relSize ? prev : current,
+    );
+    if (!manualSelection) {
+      if (!largestNode.selected) {
+        setCodeAndPlan(
+          treeStructData.code[largestNode.treeInd],
+          treeStructData.plan[largestNode.treeInd],
+        );
+      }
+      staticNodes.forEach((node) => {
+        node.selected = node === largestNode;
+      });
+    }
+  }
+  background(bgCol);
+  // global animation transforms
+  translate(width / 2, height / 2);
+  scale(scaleFactor);
+
+  
+  // ---- fg render ----
+  edges.forEach((e) => e.render());
+  nodes.forEach((n) => n.render());
+  
+};
+
+    </script>
+    <title>AIDE Run Visualization</title>
+    <style>
+      body,
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: scroll;
+      }
+      body {
+        background-color: #f2f0e7;
+      }
+      canvas {
+        float: left;
+        height: 100vh;
+        width: 40vw;
+      }
+      #text-container {
+        float: right;
+        height: 100vh;
+        width: 50vw;
+        background-color: #282c34;
+      }
+      #plan {
+        /* border-left: 2px solid #282c34; */
+        background-color: #282c34;
+        color: #f2f0e7;
+        min-height: 5rem;
+        padding: 1em 0 1em 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <pre
+      id="text-container"
+    ><div id="plan"></div><hr><code id="code" class="language-python"></code></pre>
+  </body>
+</html>

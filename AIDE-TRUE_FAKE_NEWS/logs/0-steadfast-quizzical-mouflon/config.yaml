@@ -1,0 +1,54 @@
+data_dir: !!python/object/apply:pathlib.PosixPath
+- /
+- Users
+- alejandro
+- Documents
+- Repositorios
+- alejandromadrid
+- AIDE-TRUE_FAKE_NEWS
+- Data
+desc_file: null
+goal: Build a classifier for fake and true news.
+eval: RMSLE, confusion matrix and ROC Curve
+log_dir: !!python/object/apply:pathlib.PosixPath
+- /
+- Users
+- alejandro
+- Documents
+- Repositorios
+- alejandromadrid
+- AIDE-TRUE_FAKE_NEWS
+- logs
+- 0-steadfast-quizzical-mouflon
+workspace_dir: !!python/object/apply:pathlib.PosixPath
+- /
+- Users
+- alejandro
+- Documents
+- Repositorios
+- alejandromadrid
+- AIDE-TRUE_FAKE_NEWS
+- workspaces
+- 0-steadfast-quizzical-mouflon
+preprocess_data: true
+copy_data: true
+exp_name: 0-steadfast-quizzical-mouflon
+exec:
+  timeout: 3600
+  agent_file_name: runfile.py
+  format_tb_ipython: false
+agent:
+  steps: 20
+  k_fold_validation: 5
+  expose_prediction: false
+  data_preview: true
+  code:
+    model: gpt-4-turbo
+    temp: 0.5
+  feedback:
+    model: gpt-4-turbo
+    temp: 0.5
+  search:
+    max_debug_depth: 3
+    debug_prob: 0.5
+    num_drafts: 5
