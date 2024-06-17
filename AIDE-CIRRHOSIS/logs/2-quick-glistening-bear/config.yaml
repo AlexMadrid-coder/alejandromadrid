@@ -1,0 +1,55 @@
+data_dir: !!python/object/apply:pathlib.PosixPath
+- /
+- Users
+- alejandro
+- Documents
+- Repositorios
+- alejandromadrid
+- AIDE-CIRRHOSIS
+- Data
+desc_file: null
+goal: Make a classifier between the 3 values in Stage columns, split the dataset into
+  .7 train, .15 validation and .15 testing
+eval: Use a report, the accuracy and f1-score
+log_dir: !!python/object/apply:pathlib.PosixPath
+- /
+- Users
+- alejandro
+- Documents
+- Repositorios
+- alejandromadrid
+- AIDE-CIRRHOSIS
+- logs
+- 2-quick-glistening-bear
+workspace_dir: !!python/object/apply:pathlib.PosixPath
+- /
+- Users
+- alejandro
+- Documents
+- Repositorios
+- alejandromadrid
+- AIDE-CIRRHOSIS
+- workspaces
+- 2-quick-glistening-bear
+preprocess_data: true
+copy_data: true
+exp_name: 2-quick-glistening-bear
+exec:
+  timeout: 3600
+  agent_file_name: runfile.py
+  format_tb_ipython: false
+agent:
+  steps: 20
+  k_fold_validation: 5
+  expose_prediction: false
+  data_preview: true
+  code:
+    model: gpt-4-turbo
+    temp: 0.5
+  feedback:
+    model: gpt-4-turbo
+    temp: 0.5
+  search:
+    max_debug_depth: 3
+    debug_prob: 0.5
+    num_drafts: 5
