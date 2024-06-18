@@ -4498,3 +4498,34 @@ result = {'type': 'string', 'value': f'The accuracy of the classifier is {accura
 2024-06-18 11:50:16 [INFO] Executing Step 7: ResultValidation
 2024-06-18 11:50:16 [INFO] Answer: {'type': 'string', 'value': 'The accuracy of the classifier is 0.9558'}
 2024-06-18 11:50:16 [INFO] Executing Step 8: ResultParsing
+2024-06-18 11:51:40 [INFO] Question: Make a classifier with the Stage columns as the label column. It's a 3 class classifier
+2024-06-18 11:51:40 [INFO] Running PandasAI with bamboo_llm LLM...
+2024-06-18 11:51:40 [INFO] Prompt ID: 0d0667a1-845b-4485-baf5-109e9eb46d7e
+2024-06-18 11:51:40 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-06-18 11:51:40 [INFO] Executing Step 0: ValidatePipelineInput
+2024-06-18 11:51:40 [INFO] Executing Step 1: CacheLookup
+2024-06-18 11:51:40 [INFO] Using cached response
+2024-06-18 11:51:40 [INFO] Executing Step 2: PromptGeneration
+2024-06-18 11:51:40 [INFO] Executing Step 2: Skipping...
+2024-06-18 11:51:40 [INFO] Executing Step 3: CodeGenerator
+2024-06-18 11:51:40 [INFO] Executing Step 3: Skipping...
+2024-06-18 11:51:40 [INFO] Executing Step 4: CachePopulation
+2024-06-18 11:51:40 [INFO] Executing Step 4: Skipping...
+2024-06-18 11:51:40 [INFO] Executing Step 5: CodeCleaning
+2024-06-18 11:51:40 [INFO] 
+Code running:
+```
+df = pd.concat(dfs)
+X = df.drop('Stage', axis=1)
+y = df['Stage']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+clf = RandomForestClassifier(n_estimators=100, random_state=42)
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+result = {'type': 'string', 'value': f'The accuracy of the classifier is {accuracy}'}
+        ```
+2024-06-18 11:51:40 [INFO] Executing Step 6: CodeExecution
+2024-06-18 11:51:43 [INFO] Executing Step 7: ResultValidation
+2024-06-18 11:51:43 [INFO] Answer: {'type': 'string', 'value': 'The accuracy of the classifier is 0.9558'}
+2024-06-18 11:51:43 [INFO] Executing Step 8: ResultParsing
